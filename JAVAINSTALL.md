@@ -75,6 +75,9 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 
 [pic]
 
+
+## How to run a project via Eclipse
+
 * Select **"File > New>Java Project"**:
 
 [pic]
