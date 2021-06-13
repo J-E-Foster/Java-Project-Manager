@@ -33,7 +33,7 @@ git clone [url]
 * In **Git CMD**, type:
 
 ```
-git remote add
+git remote add [shortname][url]
 ```
 
 * The shortname can be anything you want. We used "upstream".
