@@ -28,12 +28,12 @@ We also welcome everyone who would like to continue improving this program!
 
 ## To run or edit this program:
 
-* You need Java and an [**IDE**]
+* You need Java and an [**IDE**].
 * If you don't have Java, go [**here**].
 * If you don't have an IDE - we reccommend Eclipe. Go [**here**].
 * Else, simply click "Code" and "Download ZIP". 
 
-	![](Github-images/0.jpg)
+![](Github-images/0.jpg)
   
 * Unzip the folder in your preferred location.
 * Run or edit the file using [**these**] steps.
