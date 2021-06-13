@@ -2,37 +2,41 @@
 
 ## How to install Java
 
-* Go to [java.com/en/download].
+* Go to [**java.com/en/download**](https://www.java.com/en/download/).
 * Click **"Agree and Start Free Download"**:
 
-[pic]
+![](Java-install-images/1.jpg)
 
 * Save file in prefferred location:
 
-pic]
+![](Java-install-images/2.jpg)
 
 * Run the **.exe** file (double click on it) and click **"Yes"**.
-* Tick the **"Change destination folder"** box, click **"Install"**, and wait for installation:
+* Tick the **"Change destination folder"** box, click **"Install"**:
 
-[pic]
+![](Java-install-images/3.jpg)
+
+* Wait for the installation:
+
+![](Java-install-images/4.jpg)
 
 * You have successfully installed Java should display after install. Click **"Close"**:
 
-[pic]
+![](Java-install-images/5.jpg)
  	
 To check installation, open **Command Prompt**:
 
-[pic]
+![](Java-install-images/6.jpg)
 
 *Type **"java -version"** and press **"Enter"**:
 
-[pic]
+![](Java-install-images/7.jpg)
 
 * The current version should be displayed.
 
 ## How to install Eclipse
 
-To run Java, you need an [**IDE**], we reccommend **Eclipse**.
+To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-an-ide), we reccommend **Eclipse**.
 
 * Go to [**eclipse.org/downloads**].
 * Click "Download":
