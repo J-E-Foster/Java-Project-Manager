@@ -82,4 +82,4 @@ We explicitly welcome the contributions of any non-developers!
 
 It is very important that the end-users of our software have the best possible experience, and so we welcome any issues or suggestions you might have. You are vital in helping us produce better software that not only works, but is easy and pleasiing to use. 
 
-Please contact us directly via [email](mailto:anoxicdrollie@gmail.com) or submit an [issue](https://github.com/JOHN-HENRY-FOSTER/L1-Capstone1/issues).
+Please contact us directly via [email](mailto:anoxicdrollie@gmail.com) or submit an [issue](https://github.com/JOHN-HENRY-FOSTER/L2-Capstone1/issues).
