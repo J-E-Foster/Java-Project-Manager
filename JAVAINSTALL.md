@@ -2,7 +2,7 @@
 
 ## How to install Java
 
-* Go to [**java.com/en/download**](https://www.java.com/en/download/).
+* Go to [**java.com**](https://www.java.com/en/download/).
 * Click **"Agree and Start Free Download"**:
 
 ![](Java-install-images/1.jpg)
@@ -41,43 +41,43 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 * Go to [**eclipse.org/downloads**](https://www.eclipse.org/downloads/).
 * Click **"Download"**:
 
-[pic]
+![](Eclipse-install-images/1.jpg)
 
 * Select Get Eclipse IDE 2021-03 and click **"Download x86_64"**:
 
-[pic]
+![](Eclipse-install-images/2.jpg)
 
 * Save file to preferred location:
 
-[pic]
+![](Eclipse-install-images/3.jpg)
 	
 * Run the **.exe** file (double click on it) - **eclipseinstaller** should display:
 
-[pic]
+![](Eclipse-install-images/4.jpg)
 
 * Select **"Eclipse IDE for Java Developers"**:
 
-[pic]
+![](Eclipse-install-images/5.jpg)
 
 * Choose your destination folder and click **"Install"**:
 
-[pic]
+![](Eclipse-install-images/6.jpg)
 
 * Click **"Accept now"** on the **User Agreement**:
 
-[pic]
+![](Eclipse-install-images/7.jpg)
 
 * Wait for installation and click **"Launch"**:
 
-[pic]
+![](Eclipse-install-images/8.jpg)
 
 * Choose your destination folder for Eclipse workspace (this will store all your Java projects) and click **"Launch"**:
 
-[pic]
+![](Eclipse-install-images/9.jpg)
 
 * Eclipse Welcome screen should be displayed:
 
-[pic]
+![](Eclipse-install-images/10.jpg)
 
 
 ## How to run a project via Eclipse
