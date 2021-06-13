@@ -51,23 +51,24 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 
 ![](Eclipse-install-images/3.jpg)
 	
-* Run the **.exe** file (double click on it) - **eclipseinstaller** should display:
+* Run the **.exe** file (double click on it) - **eclipseinstaller** should display.
+* Select **"Eclipse IDE for Java Developers"**:
 
 ![](Eclipse-install-images/4.jpg)
 
-* Select **"Eclipse IDE for Java Developers"**:
+* Choose your destination folder and click **"Install"**:
 
 ![](Eclipse-install-images/5.jpg)
 
-* Choose your destination folder and click **"Install"**:
+* Click **"Accept now"** on the **User Agreement**:
 
 ![](Eclipse-install-images/6.jpg)
 
-* Click **"Accept now"** on the **User Agreement**:
+* Wait for installation:
 
 ![](Eclipse-install-images/7.jpg)
 
-* Wait for installation and click **"Launch"**:
+* Click **"Launch"**:
 
 ![](Eclipse-install-images/8.jpg)
 
@@ -84,35 +85,32 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 
 * Select **"File > New>Java Project"**:
 
-[pic]
+![](Eclipse-install-images/11.jpg)
 
 * Enter the new project name (we suggest **"L2-Capstone1"**) and click **Finish**:
 
-[pic]
+![](Eclipse-install-images/12.jpg)
 
-* Select small **"J"** icon to the right and close **welcome** tab:
-
-[pic]
-
+* Select small **"J"** icon to the right and close **welcome** tab.
 * You should see the created folder in the **Package Explorer**.
 * Navigate to **"src"**:
 
-[pic]
-	
+![](Eclipse-install-images/13.jpg)
+
 * Copy the three **.jav** files from where you saved them into **"src"**:
 
-[pic]
-
+![](Eclipse-install-images/14.jpg)
+	
 * Double click on a file to open it in the compiler:
 
-[pic]
+![](Eclipse-install-images/15.jpg)
 
 * To run them, select **"Run"** tab and click **"Run"**:
 
-[pic]
+![](Eclipse-install-images/16.jpg)
 
 * You should now see the program running in the Eclipse Console:
 
-[pic]
+![](Eclipse-install-images/17.jpg)
 
 And that's it! You're all set up!
