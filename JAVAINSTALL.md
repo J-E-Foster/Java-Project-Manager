@@ -38,8 +38,8 @@ To check installation, open **Command Prompt**:
 
 To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-an-ide), we reccommend **Eclipse**.
 
-* Go to [**eclipse.org/downloads**].
-* Click "Download":
+* Go to [**eclipse.org/downloads**](https://www.eclipse.org/downloads/).
+* Click **"Download"**:
 
 [pic]
 
@@ -47,19 +47,19 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 
 [pic]
 
-*Save file to preferred location:
+* Save file to preferred location:
 
 [pic]
 	
-*Run the **.exe** file (double click on it) - **eclipseinstaller** should display:
+* Run the **.exe** file (double click on it) - **eclipseinstaller** should display:
 
 [pic]
 
-* elect **"Eclipse IDE for Java Developers"**:
+* Select **"Eclipse IDE for Java Developers"**:
 
 [pic]
 
-*Choose your destination folder and click **"Install"**:
+* Choose your destination folder and click **"Install"**:
 
 [pic]
 
@@ -67,7 +67,7 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 
 [pic]
 
-*Wait for installation and click **"Launch"**:
+* Wait for installation and click **"Launch"**:
 
 [pic]
 
@@ -86,7 +86,7 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 
 [pic]
 
-* Enter the new project name (we suggest **"L2-Capstone1"**):
+* Enter the new project name (we suggest **"L2-Capstone1"**) and click **Finish**:
 
 [pic]
 
@@ -95,11 +95,14 @@ To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-a
 [pic]
 
 * You should see the created folder in the **Package Explorer**.
-*Navigate to **"src"**:
+* Navigate to **"src"**:
 
 [pic]
 	
-* Copy the **.jav** files from where you saved them into **"src"**.
+* Copy the three **.jav** files from where you saved them into **"src"**:
+
+[pic]
+
 * Double click on a file to open it in the compiler:
 
 [pic]
