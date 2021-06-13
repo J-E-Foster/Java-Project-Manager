@@ -38,12 +38,12 @@ To check installation, open **Command Prompt**:
 
 To run Java, you need an [**IDE**](https://www.codecademy.com/articles/what-is-an-ide), we reccommend **Eclipse**.
 
-* Go to [**eclipse.org/downloads**](https://www.eclipse.org/downloads/).
-* Click **"Download"**:
+* Go to [**eclipse.org**](https://www.eclipse.org/downloads/).
+* Select Get Eclipse IDE 2021-03 and click **"Download x86_64"**:
 
 ![](Eclipse-install-images/1.jpg)
 
-* Select Get Eclipse IDE 2021-03 and click **"Download x86_64"**:
+* * Click **"Download"**:
 
 ![](Eclipse-install-images/2.jpg)
 
