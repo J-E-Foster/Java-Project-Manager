@@ -4,7 +4,7 @@
 
 We're very happy you are thinking of contributing to this project!
 
-We seek to help create a healthy open source collaboration space via  following the [**Contributor Covenanant**](https://www.contributor-covenant.org/) code of conduct, 
+We seek to help create a healthy open source collaboration space via  following the [**Contributor Covenanant**](CODEOFCONDUCT.md#code-of-conduct) code of conduct, 
 and ask all contributors to do the same.
 
 If at any point you are unsure about anything, do send us an [email](mailto:anoxicdrollie@gmail.com).
@@ -24,7 +24,7 @@ Please see [**Licence**] for more information.
 
 * To submit work for contribution, you need a [**Github** account](https://github.com).
 * You also need [**Git**](https://docs.github.com/en/github/getting-started-with-github/quickstart/set-up-git).  
-* Follow [**these steps**] to create a local copy of this repository on your machine and to start submitting changes. 
+* Follow [**these steps**](WORKFLOW.md#contributing-via-the-fork-and-branch-workflow) to create a local copy of this repository on your machine and to start submitting changes. 
 
 ### Code style
 
@@ -56,7 +56,7 @@ We generally try to follow the [**Google Python Style Guide**](https://google.gi
 * Except for very urgent or very small changes, we leave the requests open for at least a day.
 * This way other people have the chance to review/coment. 
 * We ask that anyone who reviews a pull request should leave a "looked at" note.
-* Please be professional, civil, and constructive when commenting on pull requests or responding to comments (please see our [code of contuct]).
+* Please be professional, civil, and constructive when commenting on pull requests or responding to comments (please see our [**Code of Conduct**](CODEOFCONDUCT.md#code-of-conduct)).
 * If replying to a comment, condiser being appreciative and try to reply to every comment made. 
 * Do ask for clarification if something is unclear.
 	
