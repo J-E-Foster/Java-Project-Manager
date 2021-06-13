@@ -17,16 +17,16 @@ This project is a project management application designed for a small engirneeri
 ## Who can use it? 
 
 Anyone  can use this free, open source software, although it was desinged for:
-* Organizations or individuals who wish to have a more efficient record keeping system for various medium to large scale projects.
+* Organizations or individuals who wish to have a more efficient record keeping system for medium to large scale projects.
+* This includes businesses specializing in skilled labor, construction, maintainance, renovation, installation of security systems, landscaping, and agricultutral projects.
 * Engineering and architecture firms.
 * Property development firms.
-* Individual or orgnaizations contractors/craftsmen for skilled labor, cosntruction, maintaincance, 	 renovation,  installation of security systems, landscaping, agricultutral projects.
 * Beginner developers looking for something relatively simple to work with.
 * Developers of similar systems looking for components.
 
 We also welcome everyone who would like to continue improving this program!
 
-h2 To run or edit this program:
+## To run or edit this program:
 
 * You need Java and an [**IDE**]
 * If you don't have Java, go [**here**].
