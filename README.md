@@ -1,4 +1,4 @@
-# L2-Capstone1                                                             
+# Java-ProjectManager-Capstone                                                             
 
 This project is a project management application designed for a small engirneering firm to keep track of their projects and the people involved in them.  It aims to provide a more effective way of securely storing, accessing, and changing vital project and personal information, and could be adapted for any organization with similar needs.
 
