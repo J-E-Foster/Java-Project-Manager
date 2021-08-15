@@ -84,7 +84,7 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 
 ![](Eclipse-install-images/11.jpg)
 
-* Enter the new project name (we suggest **"L2-Capstone1"**):
+* Enter the new project name:
 
 ![](Eclipse-install-images/12.jpg)
 
@@ -93,11 +93,10 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 ![](Eclipse-install-images/13.jpg)
 
 * You should see the created folder in the **Package Explorer**.
-*Navigate to **"src"**:
+*Navigate to **"src"** and copy the **.jav** files from where you saved them into **"src"**:
 
 ![](Eclipse-install-images/14.jpg)
 	
-* Copy the **.jav** files from where you saved them into **"src"**.
 * Double click on a file to open it in the compiler:
 
 ![](Eclipse-install-images/15.jpg)
