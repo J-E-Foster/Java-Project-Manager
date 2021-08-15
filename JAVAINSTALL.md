@@ -22,13 +22,16 @@
 
 ![](Java-install-images/5.jpg)
  	
-To check installation, open **Command Prompt**:
+* To check installation, open **Command Prompt**:
 
 ![](Java-install-images/6.jpg)
+
+* Type the following command and press Enter:
 
 ```
 java -version
 ```
+
 * The current version should be displayed:
 
 ![](Java-install-images/7.jpg)
@@ -46,17 +49,17 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 
 ![](Eclipse-install-images/2.jpg)
 
-*Save file to preferred location:
+* Save file to preferred location:
 
 ![](Eclipse-install-images/3.jpg)
 	
-*Run the **.exe** file (double click on it) - **eclipseinstaller** should display.
+* Run the **.exe** file (double click on it) - **eclipseinstaller** should display.
 
 * Select **"Eclipse IDE for Java Developers"**:
 
 ![](Eclipse-install-images/4.jpg)
 
-*Choose your destination folder and click **"Install"**:
+* Choose your destination folder and click **"Install"**:
 
 ![](Eclipse-install-images/5.jpg)
 
@@ -64,7 +67,7 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 
 ![](Eclipse-install-images/6.jpg)
 
-*Wait for installation and click **"Launch"**:
+* Wait for installation and click **"Launch"**:
 
 ![](Eclipse-install-images/7.jpg)
 
@@ -88,12 +91,13 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 
 ![](Eclipse-install-images/12.jpg)
 
-* Select small **"J"** icon to the right and close **welcome** tab:
-
+* Select small **"J"** icon to the right and close **welcome** tab.
+* You should see the created folder in the **Package Explorer**.
+* Navigate to **"src"**:
+* 
 ![](Eclipse-install-images/13.jpg)
 
-* You should see the created folder in the **Package Explorer**.
-* Navigate to **"src"** and copy the **.jav** files from where you saved them into **"src"**:
+* Copy the **.jav** files from where you saved them into **"src"**:
 
 ![](Eclipse-install-images/14.jpg)
 	
