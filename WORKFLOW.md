@@ -33,7 +33,7 @@ git clone [url]
 * In **Git CMD**, type:
 
 ```
-git remote add
+git remote add [shortname] [url]
 ```
 
 * The shortname can be anything you want. We used "upstream".
@@ -70,10 +70,8 @@ git push origin [new branch name]
 
 ## Open pull request
 * You can request that your change to be taken up into the main repository.
-* Once you push to your forked remote, click the **"Compare & pull request"** button that appeared your forked repository:
-[pic]
-* Open a pull request screen should appear:
-[pic]
+* Once you push to your forked remote, click the **"Compare & pull request"** button that appeared your forked repository.
+* Open a pull request screen should appear.
 * Write a descriptive message and click **"Create pull request"**.
 
 ## Clean up after a merge
