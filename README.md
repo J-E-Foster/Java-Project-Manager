@@ -29,7 +29,7 @@ We also welcome everyone who would like to continue improving this program!
 
 * You need **Java** and an **IDE**
 * If you don't have Java, go [**here**](JAVAINSTALL.md#.how-to-install-java).
-* If you don't have an IDE - we reccommend Eclipe. Go [**here**](JAVAINSTALL.md##.how-to-install-eclipse).
+* If you don't have an IDE - we reccommend Eclipe. Go [**here**](JAVAINSTALL.md#.how-to-install-eclipse).
 * Else, simply click **Code** and **Download ZIP** above:
 
 ![](Github-images/0.jpg).
