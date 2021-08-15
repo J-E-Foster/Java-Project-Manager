@@ -4,7 +4,7 @@
 
 We're very happy you are thinking of contributing to this project!
 
-We seek to help create a healthy open source collaboration space via  following the [**Contributor Covenanant**](https://www.contributor-covenant.org/) code of conduct, 
+We seek to help create a healthy open source collaboration space via  following the [**Contributor Covenanant**](CODEOFCONDUCT.md#code-of-conduct) code of conduct, 
 and ask all contributors to do the same.
 
 If at any point you are unsure about anything, do send us an [email](mailto:anoxicdrollie@gmail.com).
@@ -18,13 +18,13 @@ If you prefer more direct action, you can submit a pull request or and issue str
 * You are free to use, change and redistrubute this software in any way you see fit, provided the same freedoms are guaranteed to others by redistributing under the same licence.
 * There is no contributor licence agreement. Contributors retain the copywrite to their contributions as long as they honor the licence requirements.
 
-Please see [**Licence**] for more information.
+Please see [**Licence**](LICENCE.md#licence) for more information.
 
 ## Submission guidelines for developers
 
 * To submit work for contribution, you need a [**Github** account](https://github.com).
 * You also need [**Git**](https://docs.github.com/en/github/getting-started-with-github/quickstart/set-up-git).  
-* Follow [**these steps**] to create a local copy of this repository on your machine and to start submitting changes. 
+* Follow [**these steps**](WORKFLOW.md#contributing-via-the-fork-and-branch-workflow) to create a local copy of this repository on your machine and to start submitting changes. 
 
 ### Code style
 
