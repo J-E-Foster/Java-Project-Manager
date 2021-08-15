@@ -5,30 +5,33 @@
 * Go to [java.com/en/download].
 * Click **"Agree and Start Free Download"**:
 
-[pic]
+![](Java-install-images/1.jpg)
 
 * Save file in prefferred location:
 
-pic]
+![](Java-install-images/2.jpg)
 
 * Run the **.exe** file (double click on it) and click **"Yes"**.
 * Tick the **"Change destination folder"** box, click **"Install"**, and wait for installation:
 
-[pic]
+![](Java-install-images/3.jpg)
+
+![](Java-install-images/4.jpg)
 
 * You have successfully installed Java should display after install. Click **"Close"**:
 
-[pic]
+![](Java-install-images/5.jpg)
  	
 To check installation, open **Command Prompt**:
 
-[pic]
+![](Java-install-images/6.jpg)
 
-*Type **"java -version"** and press **"Enter"**:
+```
+java -version
+```
+* The current version should be displayed:
 
-[pic]
-
-* The current version should be displayed.
+![](Java-install-images/7.jpg)
 
 ## How to install Eclipse
 
@@ -37,74 +40,74 @@ To run Java, you need an [**IDE**], we reccommend **Eclipse**.
 * Go to [**eclipse.org/downloads**].
 * Click "Download":
 
-[pic]
+![](Eclipse-install-images/1.jpg)
 
 * Select Get Eclipse IDE 2021-03 and click **"Download x86_64"**:
 
-[pic]
+![](Eclipse-install-images/2.jpg)
 
 *Save file to preferred location:
 
-[pic]
+![](Eclipse-install-images/3.jpg)
 	
-*Run the **.exe** file (double click on it) - **eclipseinstaller** should display:
-
-[pic]
+*Run the **.exe** file (double click on it) - **eclipseinstaller** should display.
 
 * Select **"Eclipse IDE for Java Developers"**:
 
-[pic]
+![](Eclipse-install-images/4.jpg)
 
 *Choose your destination folder and click **"Install"**:
 
-[pic]
+![](Eclipse-install-images/5.jpg)
 
 * Click **"Accept now"** on the **User Agreement**:
 
-[pic]
+![](Eclipse-install-images/6.jpg)
 
 *Wait for installation and click **"Launch"**:
 
-[pic]
+![](Eclipse-install-images/7.jpg)
+
+![](Eclipse-install-images/8.jpg)
 
 * Choose your destination folder for Eclipse workspace (this will store all your Java projects) and click **"Launch"**:
 
-[pic]
+![](Eclipse-install-images/9.jpg)
 
 * Eclipse Welcome screen should be displayed:
 
-[pic]
+![](Eclipse-install-images/10.jpg)
 
 ## How to run a program via Eclipse
 
 * Select **"File > New>Java Project"**:
 
-[pic]
+![](Eclipse-install-images/11.jpg)
 
 * Enter the new project name (we suggest **"L2-Capstone1"**):
 
-[pic]
+![](Eclipse-install-images/12.jpg)
 
 * Select small **"J"** icon to the right and close **welcome** tab:
 
-[pic]
+![](Eclipse-install-images/13.jpg)
 
 * You should see the created folder in the **Package Explorer**.
 *Navigate to **"src"**:
 
-[pic]
+![](Eclipse-install-images/14.jpg)
 	
 * Copy the **.jav** files from where you saved them into **"src"**.
 * Double click on a file to open it in the compiler:
 
-[pic]
+![](Eclipse-install-images/15.jpg)
 
 * To run them, select **"Run"** tab and click **"Run"**:
 
-[pic]
+![](Eclipse-install-images/16.jpg)
 
 * You should now see the program running in the Eclipse Console:
 
-[pic]
+![](Eclipse-install-images/17.jpg)
 
 And that's it! You're all set up!
