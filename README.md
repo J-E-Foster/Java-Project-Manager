@@ -25,7 +25,7 @@ Anyone  can use this free, open source software, although it was desinged for:
 
 We also welcome everyone who would like to continue improving this program!
 
-h2 To run or edit this program:
+## To run or edit this program:
 
 * You need **Java** and an **IDE**
 * If you don't have Java, go [**here**](JAVAINSTALL.md#.how-to-install-java).
