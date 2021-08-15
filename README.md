@@ -27,19 +27,21 @@ We also welcome everyone who would like to continue improving this program!
 
 h2 To run or edit this program:
 
-* You need Java and an [**IDE**]
-* If you don't have Java, go [**here**].
-* If you don't have an IDE - we reccommend Eclipe. Go [**here**].
-* Else, simply click "Code" and "Download ZIP". 
-	[pic]
+* You need **Java** and an **IDE**
+* If you don't have Java, go [**here**](JAVAINSTALL.md#.how-to-install-java).
+* If you don't have an IDE - we reccommend Eclipe. Go [**here**](JAVAINSTALL.md#.how-to-install-eclipse).
+* Else, simply click **Code** and **Download ZIP** above:
+
+![](Github-images/0.jpg).
+	
 * Unzip the folder in your preferred location.
-* Run or edit the file using [**these**] steps.
+* Run or edit the file using [**these**](JAVAINSTALL.md#.how-to-run-a-program-via-eclipse) steps.
 
 ## How you can help
 
-* [**Contact us**] if you have any suggestions/questions.
-* Write up any issues [**here**].
-* Read our [**Contribution Guide**] which contains everything you need to know about helping to improve the project. 
+* Contact us if you have any suggestions/questions.
+* Write up any issues [**here**](https://github.com/JOHN-HENRY-FOSTER/Java-ProjectManager-Capstone/issues).
+* Read our [**Contribution Guide**](CONTRIBUTING.md#contributing) which contains everything you need to know about helping to improve the project. 
 * We explicity welcome non-developer input.
 
 ## Licence
@@ -49,10 +51,10 @@ This project has been licenced under [**GPLv3**](https://www.gnu.org/licenses/gp
 It is [free](https://www.gnu.org/philosophy/free-sw.html), [open source](https://opensource.org/osd), [copyleft](https://www.gnu.org/licenses/copyleft.en.html) software: 
 Anyone can use, edit, and redistribute it in any way they see fit, but it must be redistributed under the same licence, and certain restrictions apply.
 
-For more information, please see [**Licence**].
+For more information, please see [**Licence**](LICENCE.md#licence)..
 
 ## Contact us
 
 The fastest way to get hold of us is always via [email](mailto:anoxicdrollie@gmail.com).
 
-Shoot us a mail, and we'll get back to you as soon as time allows - we would love to hear from you!
+Shoot us a mail, and we'll get back to you as soon as time allows - we'd would love to hear from you!
