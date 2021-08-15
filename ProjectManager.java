@@ -1,578 +1,690 @@
-//java.util package imported to use scanner and regex.
-//java.text package imported to use DecimalFormat:
-//java.math package imported to use RoundingMode;
+package projectmanager;
+
+//Note: All package classes edited according to Google Java Style Guide (Github.io, 2021) and Java naming conventions (Oracle.com, 2021).
+//Javadoc comments added according to Oracle.com (2021*).
+
+//For Scanner and regex.
 import java.util.*;
-import java.text.*;
-import java.math.*;
+//For FileWriter, FileinputStream, FileoutputStream, ObjectinputStream, ObjectoutputStream, and IOException & its subclasses.
+import java.io.*;
 
 
-///////////MAIN CLASS///////////
+/**
+ * This application class is a project-management program that allows users to create, view, update, and finalize projects.
+ * <p>
+ * It was developed for a fictional small structural engineering firm called Poised.
+ * <p>
+ * This class uses <code>{@link Project}</code> and <code>{@link Person}</code> classes to create and update objects, 
+ * and stores these objects in two <code>LinkedHashMaps</code>.
+ * It creates/uses three text file artifacts - two to store the <code>LinkedHashMap</code> objects, and one to record the details of all finalized projects.
+ * The main method follows a boolean control structure consisting of one main menu loop, three submenu loops, and one select-project loop.
+ * <p>
+ * Changes from V1: code refactored, attributes set to private, working maps changed from <code>HashMap</code> to <code>LinkedHashMap</code>, 
+ * error/exception handling added, new methods included to add functionality to the view and update submenus, 
+ * and to enable writing/reading <code>LinkedHashMap</code> objects to/from file.
+ * <p>
+ * Changes from V2.0: Main method shortened and refactored into static methods. 
+ * Methods <code>{@link Project#selectProject(Map<String, Project>, String) selectProject}</code>,
+ * <code>{@link Project#generateInvoice(Map<String, Person>) generateInvoice}</code>,
+ * <code>{@link Project#viewAll(Map<String, Project>) viewAll}</code>,
+ * <code>{@link Project#viewIncomplete(Map<String, Project>) viewIncomplete}</code>, and
+ * <code>{@link Project#viewPastDue(Map<String, Project>) viewPastDue}</code> moved to <code>Project</code>.
+ * Methods <code>{@link Person#selectPerson(String, Map<String, Person>) selectPerson}</code> and 
+ * <code>{@link Person#updatePerson(String[]) updatePerson}</code> moved to <code>Person</code>.
+ * 
+ * @author J.E. Foster © 
+ * @version V2.1 August 2021
+ *
+ */
+public class ProjectManager {
 
-public class ProjectManager
-{
-//"Global" variables are declared to be used across methods. These are static variables declared in the main class (outside the main method).
-////(Ram, 2018, Tutorialspoint.com, t.ly/ZOqf), (JAVA, 2013, Stackoverflow.com, t.ly/gUp0).
-//"persons" and "projects" are HashMaps with String keys that temporarily store new Person and Project objects as values (W3Schools.com, 2021, Java HashMap, t.ly/m88l). 
-//This allows for the testing of methods, otherwise there is nowhere to store them, as the program does not write to file yet. 
-//Note: serialization via "java.io" would ideally be used to store the created Project and Person objects (Geeksforgeeks.com, 2019, Serialization and Deserialization in Java with Example, t.ly/ylrP).
-//"menu" controls loops to the main menu.
-//"submenu" controls loops to submenus.
-//"selectProject" controls loops to choose another project.
-//"subAndSelect" controls loops to submenus and to choose another project.
-//"INPUT" is a scanner object that will read user input across all methods:
-	public static Map <String, Person> persons = new HashMap<>();
-	public static Map <String, Project> projects = new HashMap<>();  
-	public static boolean menu = false;    
-	public static boolean submenu = false;  
-	public static boolean selectProject = false;
-	public static boolean subAndSelect = false;
-	public static final Scanner INPUT = new Scanner(System.in);
-
-		
-///////////MAIN METHOD///////////
+//ATTRIBUTES (for static variables - see Ram, 2018 and JAVA, 2013).
+//Maps to store Project and Person objects.
+	private static Map <String, Person> persons;       
+	private static Map <String, Project> projects;
 	
-	public static void main (String [] args)
-	{		
-//The user is welcomed to the program:		
+//Controls loops to submenus.
+	private static boolean submenu = false;	
+//Controls loops to choose another project.
+	private static boolean selectProject = false;
+	
+	private static final Scanner INPUT = new Scanner(System.in); 
+		
+
+//MAIN METHOD
+//Suppresses unchecked cast warning (Myers, 2009).
+	@SuppressWarnings("unchecked")
+	public static void main (String [] args) {
+		
+//Reads LinkedHashMap objects from text files.		
+//LinkedHashMaps (Geeksforgeeks.com, 2021) used instead of HashMaps (W3schools.com, 2021**) to maintain insertion order.	
+		projects = (LinkedHashMap<String, Project>) startSequenceReadHashmaps("projects.txt");            
+		persons = (LinkedHashMap<String, Person>) startSequenceReadHashmaps("persons.txt"); 
+	
 		System.out.println("Welcome to the Poised Project Manager.");
-
-//While "menu" is true, the main menu is displayed, and user input stored as "choice":	
-		menu = true;
-		while (menu)
-		{
-			System.out.println("\nPlease select an option from the menu below:\n"
-					+ "cn -\tcreate new project\n"
-					+ "vp -\tview projects & people\n"
-					+ "up -\tupdate project\n"
-					+ "fp -\tfinalize project\n"
-					+ "e  -\texit");
-			
-			String choice = INPUT.nextLine();
-
-			
-//The outcomes for different main menu choices are determined:
-			
-//1.) If the user chooses to create a new project ("choice" == "cn"), "menu" becomes false (menu loop is exited), and "submenu" becomes true.
-//While "submenu" is true (this will loop back to create another project), methods "createNew()" and "backToMenus()" are called.
-//"createNew()" creates a new project, while "backToMenus()" allows the user to go back to either create another project, go back to the main menu, or quit:
-			if (choice.equalsIgnoreCase("cn")) 
-			{
-				menu = false;
-				submenu = true;
-				
-				while (submenu) 
-				{
-					createNew();
-					backToMenus("\nCreate another project ('y'), go back to the main menu ('b'), or exit ('e')?"); 
-				}		
-			}
-
-
-//2.) If the user chooses to view projects or people ("choice" == "vp"), Booleans "menu" and "submenu" switch values again.
-//While "submenu" is true, the "view" submenu is displayed, and user choice stored as "choiceVp":		
-			if (choice.equalsIgnoreCase("vp")) 
-			{
-				menu = false;
-				submenu = true;
-				
-				while (submenu)
-				{
-					System.out.println("\nPlease select a view option below:\n" 
-							+ "va  -\tview all projects\n" ////Is this option needed?
-							+ "vi  -\tview incomplete projects\n"
-							+ "vpd -\tview projects past due date\n"
-							+ "sp  -\tsearch for projects\n"
-					        + "vp  -\tview people\n"   ////Is this option needed?, probably needs separate submenu if yes.
-							+ "b   -\tgo back to the main menu\n"
-							+ "e   -\texit");
-					
-					String choiceVp = INPUT.nextLine();
-
-//The outcomes for different "view" submenu choices are determined:
-//Note: the outcomes (and possible methods) still need to be finalized (not part of first deliverable). 
-					if (choiceVp.equalsIgnoreCase("va"))
-					{
-						//do something
-						backToMenus("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?");
-					}
-					
-					if (choiceVp.equalsIgnoreCase("vi"))
-					{
-						//do something
-						backToMenus("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?");
-					}
-					
-					if (choiceVp.equalsIgnoreCase("vpd"))
-					{
-						//do something
-						backToMenus("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?");
-					}
-					
-					if (choiceVp.equalsIgnoreCase("sp"))
-					{
-						//do something
-						//Project selected = selectProject();
-						backToMenus("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?");
-					}
-					if (choiceVp.equalsIgnoreCase("vp"))
-					{
-						//do something
-						backToMenus("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?");
-					}
-					
-					if (choiceVp.equalsIgnoreCase("b"))
-					{
-						submenu = false;
-						menu = true;
-					}
-					
-					if (choiceVp.equalsIgnoreCase("e"))
-					{
-						INPUT.close();
-						System.exit(0);
-					}
-				}
-			}
-			
-//End of "view" submenu choices.
-	
-			
-//3.) If the user chooses to update a project ("choice" == "up"), "menu" and "selectProject" switch values.
-//While "selectProject", "selectProject()" method is called, and the return value (the user-selected Project object) is stored as "selected".
-//If "selected" is null (i.e. the project could not be found), an error message is displayed, and "backToMenus()" called.
-//Else, "selectProject" becomes false, and "submenu" and "subAndSelect" become true:
-			if (choice.equalsIgnoreCase("up"))  
-			{
-				menu = false;
-				selectProject = true;
-				
-				while (selectProject)
-				{				
-					Project selected = selectProject(); 
-					if (selected == null)
-					{
-						backToMenus("\nThe project you are looking for has already been finalized or does not exist."
-								+ "\nChoose another project ('y'), go back to the main menu ('b') or exit ('e')?");
-					}
-					else
-					{
-						selectProject = false;
-						submenu = true;
-						subAndSelect = true;
-
-//While "submenu", the "update" submenu is displayed, and user choice stored as "choiceUp":						
-						while (submenu)
-						{
-							System.out.println("\nPlease select an update option below:\n"  
-									+ "ud  -\tupdate deadline\n"
-									+ "utp -\tupdate total amount paid to date\n"
-									+ "uc  -\tupdate contractor details\n"  ////update architect & customer details?????
-									+ "o   -\tupdate another project\n"
-									+ "b   -\tgo back to the main menu\n"
-									+ "e   -\texit");
-							
-							String choiceUp = INPUT.nextLine();
-							
-//The outcomes for different submenu choices are determined:
-
-//3.1) If the user chooses to update the project deadline ("choiceUp" == "ud"), "submenu" becomes false, and the user is requested to enter a new deadline, "newDeadLine".
-//Project method "changeDeadLine" is called on project "selected" with the new deadline as parameter, thus changing the "deadline" attribute of "selected".
-//3.2) The same process is repeated if the user chooses to update the total amount paid to date ("choiceUp" == "utp"):
-							if (choiceUp.equalsIgnoreCase("ud"))
-							{ 
-								System.out.println("\nPlease enter a new deadline:");
-								String newDeadLine = INPUT.nextLine();
-								selected.changeDeadLine(newDeadLine);
-								System.out.println("\n" + selected); ////This is a test.
-								backToMenus("\nUpdate another project detail ('y'), choose another project ('o'), go back to the main menu ('b'), or exit ('e')?");
-					        }
-								
-							if (choiceUp.equalsIgnoreCase("utp"))
-							{
-								System.out.println("\nPlease enter a new total amount paid: R ");
-								String newtotalPaid = INPUT.nextLine();
-								selected.changeTotalPaid(newtotalPaid);
-								System.out.println("\n" + selected);  ////This is a test.
-								backToMenus("\nUpdate another project detail ('y'), choose another project ('o'), go back to the main menu ('b'), or exit ('e')?");
-							}
-
-//3.3) If the user chooses to update the contractor's details ("choiceUp" == "uc"), "submenu" becomes false, and the "contractor" attribute of "selected" is stored as string "contractor".
-//"updatePerson()" method is called and "contractor" passed as an argument (this will allow the user to change the contractor's cell no, email, and address):
-							if (choiceUp.equalsIgnoreCase("uc"))
-							{
-								String contractor = selected.contractor;
-								selectPerson(contractor);
-								backToMenus("\nUpdate another project detail ('y'), choose another project ('o'), go back to the main menu ('b'), or exit ('e')?");
-							}
-
-//3.4 & 3.5) If the user chooses to update another project ("choiceUp" == "o") or go back to the main menu ("choiceUp" == "b"), 
-//"submenu" and "subAndSelect" become false, and either "selectProject" or "menu" becomes true, respectively looping back to select another project, or go to the main menu.
-//3.6) If the user chooses to exit ("choiceUp" == "e"), the scanner is closed, and the JVM terminated:
-							if (choiceUp.equalsIgnoreCase("o"))
-							{
-								submenu = false;
-								subAndSelect = false;
-								selectProject = true;
-							}
-							
-							if (choiceUp.equalsIgnoreCase("b"))
-							{
-								submenu = false;
-								subAndSelect = false;
-								menu = true;
-							}
-							
-							if (choiceUp.equalsIgnoreCase("e"))
-							{
-								INPUT.close();
-								System.exit(0);
-							}
-						}
-					}					
-				}
-			 }
-
-//End of "update" submenu choices.
 		
-			
-//4.) Back in the main menu, if the user chooses to finalize a project ("choice" == "fp"), "menu" and "selectProject" switch values. 
-//While "selectProject", "selectProject()" method is called, and the return value (the user-selected Project object) is stored as "selected".
-//If "selected" is null (i.e. the project could not be found), an error message is displayed, and "backToMenus()" called.
-//Else, "finalizeProject()" and "backToMenus()" methods are called:
-			if (choice.equalsIgnoreCase("fp"))  
-			{
-				menu = false;
+//Main menu loop.	
+		while (true) {
+			String choice = startMenu();
+//Outcomes for main menu choices:	
+//1.) Starts submenu loop and allows user to create project. 
+			if (choice.equalsIgnoreCase("cn")) {
+				submenu = true;		
+				while (submenu) {
+					createNew();
+				}				
+//2.) Starts submenu loop and displays view-submenu. .
+			} else if (choice.equalsIgnoreCase("vp")) {
+				submenu = true;	
+				while (submenu) {
+					String choiceVp = viewSubmenu();
+//Outcomes for view-submenu choices:
+					viewSubmenuOutcomes(choiceVp);
+				}
+//3.) Starts select-project loop, allows user to select a project, 				
+			} else if (choice.equalsIgnoreCase("up")) {
 				selectProject = true;
-				
-				while (selectProject)
-				{
-					Project selected = selectProject();
-					
-					if (selected == null)
-					{
-						backToMenus("\nThe project you are looking for has already been finalized or does not exist."
-								+ "\nChoose another project ('y'), go back to the main menu ('b') or exit ('e')?");
+				while (selectProject) {
+					Project selectedProject = select();	
+//then starts submenu loop and displays update-submenu.
+					while (submenu) {
+						String choiceUp = updateSubmenu();
+//Outcomes for "update"-submenu choices:
+						updateSubmenuOutcomes(choiceUp, selectedProject);
 					}
-					else
-					{					
-						finalizeProject(selected);
-						backToMenus("\nFinalize another project ('y'), go back to the main menu ('b'), or exit ('e')?");
-					}						
-				}					
-			}
-			
-			
-//5.) If the user chooses to quit ("choice" == "e"), the scanner is closed, and JVM is terminated (Geeksforgeeks.com, 2016, System.exit() in Java, t.ly/1i6x):			
-			if (choice.equalsIgnoreCase("e"))
-			{
-				INPUT.close();
-				System.exit(0);
+				}									
+//4.)Writes LinkedHashMaps to text files and exits program.				
+			} else if (choice.equalsIgnoreCase("e")) {			
+				closeApp();
 			}
 		}
+	};
 	
+//METHODS
+//1.) mainMenu()
+/**
+* Displays main menu and returns user choice <code>String</code>.
+* 		
+* @return a <code>String</code> containing the selected menu option
+* @since V2.1 
+*/	
+	public static String startMenu() {
+		System.out.println("\nPlease select an option from the menu below:\n"
+				+ "cn -\tcreate new project\n"
+				+ "vp -\tview projects & people\n"
+				+ "up -\tupdate or finalize project\n"
+				+ "e  -\texit");		
+			String choice = INPUT.nextLine();
+			return choice;
+	};
+
+	
+//2.) createNew() 
+/**
+* Gets new project info via <code>{@link #getProjectAndPersonInfo() getProjectAndPersonInfo}</code>, and populates <code>Maps</code> 
+* with new <code>{@link Project}</code> and <code>{@link Person}</code> objects via
+* <code>{@link Project#populateProjectsMap(String[], Map <String, Project>) Project.populateProjectsMap}</code>, and
+* <code>{@link Person#populatePersonsMap(String[][], Map <String, Person>) Person.populatePersonsMap}</code>.
+* <p>
+* This method allows back-navigation via <code>{@link #backToMenus1(String, boolean) backToMenus1}</code>.
+* 
+* @since V2.1
+*/
+	public static void createNew() {
+		String[][] projectAndPersonInfo = getProjectAndPersonInfo();
+		Project.populateProjectsMap (projectAndPersonInfo[0], projects);
+		Person.populatePersonsMap (projectAndPersonInfo, persons);
+		submenu = backToMenus1("\nCreate another project ('y'), go back to the main menu ('b'), or exit ('e')?", submenu); 
+	};
+
+	
+//3.) viewSubmenu()
+/**
+* Displays view-submenu and returns user choice <code>String</code>.
+* 		
+* @return a <code>String</code> containing the selected menu option
+* @since V2.1
+*/
+	public static String viewSubmenu() {
+		System.out.println("\nPlease select a view option below:\n" 
+				+ "va  -\tview all projects\n" 
+				+ "vi  -\tview incomplete projects\n"
+				+ "vpd -\tview projects past due date\n"
+				+ "b   -\tgo back to the main menu\n"
+				+ "e   -\texit");			
+			String choiceVp = INPUT.nextLine();
+			return choiceVp;
 	}
 
-//End of main menu choices and of main method.
 	
+//4.) viewSubmenuOutcomes() 
+/**
+* Controls view-submenu outcomes that display <code>{@link Project Projects}</code> via 
+* <code>{@link Project#viewAll(Map<String, Project>) Project.viewAll}</code>,
+* <code>{@link Project#viewIncomplete(Map<String, Project>) Project.viewIncomplete}</code>, and
+* <code>{@link Project#viewPastDue(Map<String, Project>) Project.viewPastDue}</code> methods.
+* <p>
+* This method allows back-navigation via <code>{@link #backToMenus1(String, boolean) backToMenus1}</code>.
+* 
+* @param choiceVp a <code>String</code> containing a view-submenu choice 
+* @since V2.1
+*/	
+	public static void viewSubmenuOutcomes(String choiceVp) {
+		if (choiceVp.equalsIgnoreCase("va")) {
+			Project.viewAll(projects);
+			submenu = backToMenus1("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?", submenu);
+//2.2) Displays incomplete projects.						
+		} else if (choiceVp.equalsIgnoreCase("vi")) {
+			Project.viewIncomplete(projects);
+			submenu = backToMenus1("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?", submenu);
+//2.3) Displays projects past their due date.					
+		} else if (choiceVp.equalsIgnoreCase("vpd")) {
+			Project.viewPastDue(projects);
+			submenu = backToMenus1("\nView other projects('y'), go back to the main menu ('b'), or exit ('e')?", submenu);
+//2.4) Goes back to main menu.								
+		} else if (choiceVp.equalsIgnoreCase("b")) {
+			submenu = false;	
+//2.5) Writes LinkedHashMaps to file and exits program.						
+		} else if (choiceVp.equalsIgnoreCase("e")) {
+			System.exit(0);
+		}
+	};
 
 	
-///////////METHODS///////////
+//5.) select() 
+/**
+* Selects and returns a project via <code>{@link Project#selectProject(Map<String, Project>, String) Project.selectProject}</code>
+* <p>
+* If selected project doesn't exist, this method allows back-navigation via <code>{@link #backToMenus1(String, boolean) backToMenus1}</code>,
+* else activates submenu loop via static <code>boolean</code> <code>submenu</code>.
+* 
+* @return the selected <code>{@link Project}</code>
+* @since V2.1
+*/
+	public static Project select() {
+		System.out.println("\nPlease enter the number or name of the project you wish to update or finalize:");
+		Project selectedProject = Project.selectProject(projects, INPUT.nextLine()); //input heree???? or have to declare variable??/
 	
-//1.) "createNew()" creates a new project. A notification is displayed, and the user requested to enter all project information, stored as strings.
-//This includes: project number, project name, building type, physical address, ERF number, total fee charged, total amount paid to date, deadline, 
-//architect (name, cellphone number, email address and physical address), contractor (name, cellphone number, email address and physical address), 
-//and customer (name, cellphone number, email address and physical address):	
-	public static void createNew()
-	{
+		if (selectedProject == null) {
+			selectProject = backToMenus1("\nThe project you are looking for has already been finalized or does not exist."
+				+ "\nChoose another project ('y'), go back to the main menu ('b') or exit ('e')?", selectProject);
+		} else {
+			submenu = true;	
+		}
+		return selectedProject;
+		
+	}
+
+	
+//6.) updateSubmenu()
+/**
+* Displays update-submenu and returns user choice <code>String</code>.
+* 
+* @return a <code>String</code> containing the selected menu option
+* @since V2.1
+*/
+	public static String updateSubmenu() {
+		System.out.println("\nPlease select an update option below:\n"  
+			+ "ud  -\tupdate deadline\n"
+			+ "utp -\tupdate total amount paid to date\n"
+			+ "ua - \tupdate architect details\n"
+			+ "uc  -\tupdate contractor details\n"  
+			+ "ucu -\tupdate custormer deteails\n"
+			+ "fp - \tfinalize project\n"
+			+ "o   -\tselect another project\n"
+			+ "b   -\tgo back to the main menu\n"
+			+ "e   -\texit");
+		String choiceUp = INPUT.nextLine();
+		return choiceUp;
+	};
+	
+	
+//7.) updateSubmenuOutcomes() 
+/**
+* Controls update-submenu outcomes that update <code>{@link Project}</code> and <code>{@link Person}</code> details via 
+* <code>{@link Project#setDeadLine(String) Project.setDeadLine}</code>,
+* <code>{@link Project#setTotalPaid(String) Project.setTotalPaid}</code>,
+* <code>{@link Person#updatePerson(String[]) Person.updatePerson}</code>, and
+* <code>{@link Project#generateInvoice(Map<String, Person>) Project.generateInvoice}</code>.
+* <p>
+* This method allows back-navigation via <code>{@link #backToMenus1(String, boolean) backToMenus1}</code>, 
+* <code>{@link #backToMenus2(String) backToMenus2}</code>, and directly changing static <code>booleans</code>.
+	 
+* @param choiceUp a <code>String</code> containing an update-submenu choice
+* @param selectedProject a <code>{@link Project}</code> selected by the user
+* @since V2.1
+*/
+	public static void updateSubmenuOutcomes(String choiceUp, Project selectedProject) {
+//3.1) Allows user to update project deadline.		
+		if (choiceUp.equalsIgnoreCase("ud")) { 
+			String newDeadLine = checkUserInput("\nPlease enter a new deadline ('dd MMM yyyy'):", 
+				"(0[1-9]|[1-2][0-9]|3[0-1]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\\d\\d", 
+				"Error - invalid date or date format. Please check date and enter the deadline in format 'dd MMM yyyy'"
+				+ "(month is capitalized):");
+			selectedProject.setDeadLine(newDeadLine);
+			backToMenus2("\nUpdate another project detail or finalize project ('y'), select another project ('o'),"
+				+ "go back to the main menu ('b'), or exit ('e')?");
+//3.2) Allows user to update total amount paid.								
+		} else if (choiceUp.equalsIgnoreCase("utp")) {
+			String newTotalPaid = checkUserInput("\nPlease enter a new total amount paid: R", "([1-9]\\d+(\\.\\d\\d)?|[0](\\.[0]{2})?)", 
+				"Error. Please enter digits only - if more than zero, amount cannot start with zero; only two decimals allowed:");
+			selectedProject.setTotalPaid(newTotalPaid);
+			backToMenus2("\nUpdate another project detail or finalize project('y'), select another project ('o'),"
+				+ "go back to the main menu ('b'), or exit ('e')?");
+//3.3) Allows user to update architect's details.								
+		} else if (choiceUp.equalsIgnoreCase("ua")) {	
+			Person selectedPerson = Person.selectPerson(selectedProject.getArchitect(), persons);
+			selectedPerson.updatePerson(getNewPersonInfo());             
+			backToMenus2("\nUpdate another project detail or finalize project ('y'), select another project ('o'),"
+				+ "go back to the main menu ('b'), or exit ('e')?");	
+//3.4) Allows user to update architect's details.																
+		} else if (choiceUp.equalsIgnoreCase("uc")) {
+			Person selectedPerson = Person.selectPerson(selectedProject.getContractor(), persons);
+			selectedPerson.updatePerson(getNewPersonInfo());             
+			backToMenus2("\nUpdate another project detail or finalize project ('y'), select another project ('o'),"
+				+ "go back to the main menu ('b'), or exit ('e')?");	
+//3.5) Allows user to update architect's details.							
+		} else if (choiceUp.equalsIgnoreCase("ucu")) {
+			Person selectedPerson = Person.selectPerson(selectedProject.getCustomer(), persons);
+			selectedPerson.updatePerson(getNewPersonInfo());             
+			backToMenus2("\nUpdate another project detail or finalize project ('y'), select another project ('o'),"
+				+ "go back to the main menu ('b'), or exit ('e')?");	
+//3.6) Allows user to finalize project, generates invoice, and writes project details to file.							
+		} else if (choiceUp.equalsIgnoreCase("fp")) {
+			String completionDate = checkUserInput("\nPlease enter the completion date ('dd MMM yyyy'):", 
+				"(0[1-9]|[1-2][0-9]|3[0-1]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\\d\\d", 
+				"Error. Please check date and enter the deadLine in format 'dd MMM yyyy':");
+			selectedProject.setDeadLine(selectedProject.getDeadLine() + "\nFinalized:\t\t\t" + completionDate);			
+			selectedProject.generateInvoice(persons);
+			selectedProject.writeFinalized();
+			submenu = false;
+			selectProject = backToMenus1("\nSelect another project ('y'), go back to the main menu ('b'), or exit ('e')?", selectProject);
+//3.7) Goes back to select another project.								
+		} else if (choiceUp.equalsIgnoreCase("o")) {
+			submenu = false;
+//3.8) Goes back to the main menu.								
+		} else if (choiceUp.equalsIgnoreCase("b")) {
+			submenu = false;
+			selectProject = false;	
+//3.9) Writes LinkedHashMaps to text files, and exits program.						
+		} else if (choiceUp.equalsIgnoreCase("e")) {                        
+			closeApp();										
+		}
+	};
+		
+			
+//8.) getProjectAndPersonInfo()
+/**
+ * Gets new project and person information via user input,
+ * and returns a two dimensional a <code>Array</code> containing the info.
+ * <p>
+ * This method validates user input via <code>{@link #checkUserInput checkUserInput}</code>. If the project name is left blank, 
+ * the method constructs a project name containing the building type and customer surname.
+ * <p>
+ * Changes from V1: errors in user input handled via regex.
+ * 
+ * @return projectAndPersonInfo a two dimensional <code>String</code> <code>Array</code> containing new project and person info.
+ * @since V1	
+ */
+	public static String[][] getProjectAndPersonInfo() {
 		System.out.println("\nPlease enter new project information:\n");
-		System.out.println("Project number:");		
-		String projectNum = INPUT.nextLine();
-		System.out.println("Project name:");
-		String projectName = INPUT.nextLine();
-		System.out.println("Building type:");
-		String buildType = INPUT.nextLine(); 
-		System.out.println("Physical address:");
-		String physAddress = INPUT.nextLine();
-		System.out.println("ERF number:");
-		String erfNum = INPUT.nextLine(); 
-		System.out.println("Total fee R:");
-		String totalFee = INPUT.nextLine();
-		System.out.println("Total amount paid to date R:");
-		String totalPaid = INPUT.nextLine();
-		System.out.println("Project deadline:");
-		String deadLine = INPUT.nextLine();
 		
-		System.out.println("Architect surname:");		
-		String architectSur = INPUT.nextLine();
-		System.out.println("Architect first name(s):");		
-		String architectNam = INPUT.nextLine();
-		System.out.println("Architect cellphone number:");   
-		String architectCell = INPUT.nextLine();
-		System.out.println("Architect email address:");   
-		String architectMail = INPUT.nextLine();
-		System.out.println("Architect physical address:");   
-		String architectAddress = INPUT.nextLine();
+//Collects project and person information from user, and validates input using regular expressions (Vogel, 2007).
+		String projectNum = checkUserInput("Project number:", "\\d+", "Error. Please enter digits only:");
+		String projectName = checkUserInput("Project name:", "([A-Z][a-z]+((-| )[A-Z]?[a-z]+)*)?",
+				"Error. Please make sure project name is capitalized and contains no non-letter characters except hyphens:");	               
+		String buildType = checkUserInput("Building type:", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure building type is capitalized and contains no non-letter characters except hyphens::");																							            
+		String physAddress = checkUserInput("Physical address ('Address line 1, Address line 2, Address line 3, ..., postal code'):",
+				"((\\d+ )?[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*, ){2,}(\\d{4})", 
+				"Error. Please enter address in format 'Address line 1, Address line 2, Address line 3, ..., postal code' "
+				+ "\n(min two address lines, address lines capitalized, 4 digit postal code):");                 
+		String erfNum = checkUserInput("ERF number:", "\\d+", "Error. Please enter digits only:");	
+		String totalFee = checkUserInput("Total fee R:", "[1-9]\\d+(\\.\\d\\d)?", 
+				"Error. Please enter digits only - amount cannot start with zero and only two decimals allowed:");
+		String totalPaid = checkUserInput("Total amount paid to date R:", "([1-9]\\d+(\\.\\d\\d)?|[0](\\.[0]{2})?)", 
+				"Error. Please enter digits only - if more than zero, amount cannot start with zero; only two decimals allowed:");                   
+		String deadLine = checkUserInput("Project deadline ('dd MMM yyyy'):", 
+				"(0[1-9]|[1-2][0-9]|3[0-1]) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\\d\\d", 
+				"Error - invalid date or date format. Please check date and enter the deadline in format 'dd MMM yyyy' (month is capitalized):");
 		
-		System.out.println("Contractor surname:");		
-		String contractorSur = INPUT.nextLine();
-		System.out.println("Contractor first name(s):");		
-		String contractorNam = INPUT.nextLine();
-		System.out.println("Contractor cellphone number:");
-		String contractorCell = INPUT.nextLine();
-		System.out.println("Contractor email address:");
-		String contractorMail = INPUT.nextLine();
-		System.out.println("Contractor physical address:");
-		String contractorAddress = INPUT.nextLine();
+		String architectSur = checkUserInput("Architect surname:", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure surname is capitalized and contains no non-letter characters except hyphens:");		
+		String architectNam = checkUserInput("Architect first name(s):", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure name is capitalized and contains no non-letter characters except hyphens:");
+		String architectCell = checkUserInput("Architect cellphone number:", "0\\d{9}", 
+				"Error. Ivalid number. Please make sure number contains 10 digits and starts with 0:");	          
+//Email regex based on regex suggested by Gupta (2020).		
+		String architectMail = checkUserInput("Architect email address:", 
+				"(?!.*([_!#$%&'*+/=?`{|}~^-])\\1)([a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+\\.)*[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+@"
+				+ "((([a-zA-Z0-9]+[-][a-zA-Z0-9]+)+|[a-zA-Z0-9]+)\\.)*(?=.*[a-zA-Z])[a-zA-Z0-9]{2,}",   
+				"Error. Invalid email address format."); 
+		String architectAddress = checkUserInput("Architect physical address ('Address line 1, Address line 2, Address line 3, ..., postal code'):", 
+				"((\\d+ )?[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*, ){2,}(\\d{4})", 
+				"Error. Please enter address in format 'Address line 1, Address line 2, Address line 3, ..., postal code' "
+				+ "\n(min two address lines, address lines capitalized, 4 digit postal code):");
 		
-		System.out.println("Customer surname:");		
-		String customerSur = INPUT.nextLine();
-		System.out.println("Customer first name(s):");		
-		String customerNam = INPUT.nextLine();
-		System.out.println("Customer cellphone number:");
-		String customerCell = INPUT.nextLine();
-		System.out.println("Customer email address:");
-		String customerMail = INPUT.nextLine();
-		System.out.println("Customer physical address:");
-		String customerAddress = INPUT.nextLine();
-				  
-//An ArrayList "projectNameBlank" is created (W3schools.com, 2021, Java ArrayList, t.ly/yPnP) to help to add a project name if this was left blank above.
-//A range of different new-line and blank-space characters are added to the ArrayList (these could vary depending on OS):
-		ArrayList <String> projectNameBlank = new ArrayList <String>();
-		projectNameBlank.add("\n");
-		projectNameBlank.add("\r");
-		projectNameBlank.add("\r\n");
-		projectNameBlank.add(" ");
-		projectNameBlank.add("");
+		String contractorSur = checkUserInput("Contractor surname:", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure surname is capitalized and contains no non-letter characters except hyphens:");	
+		String contractorNam = checkUserInput("Contractor first name(s):", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure name is capitalized and contains no non-letter characters except hyphens:");
+		String contractorCell = checkUserInput("Contractor cellphone number:", "0\\d{9}", 
+				"Error. Ivalid number. Please make sure number contains 10 digits and starts with 0:");		
+		String contractorMail = checkUserInput("Contractor email address:", 
+				"(?!.*([_!#$%&'*+/=?`{|}~^-])\\1)([a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+\\.)*[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+@"
+				+ "((([a-zA-Z0-9]+[-][a-zA-Z0-9]+)+|[a-zA-Z0-9]+)\\.)*(?=.*[a-zA-Z])[a-zA-Z0-9]{2,}",   
+				"Error. Invalid email address format."); 	
+		String contractorAddress = checkUserInput("Contractor physical address ('Address line 1, Address line 2, Address line 3, ..., postal code'):", 
+				"((\\d+ )?[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*, ){2,}(\\d{4})", 
+				"Error. Please enter address in format 'Address line 1, Address line 2, Address line 3, ..., postal code' "
+				+ "\n(min two address lines, address lines capitalized, 4 digit postal code):");
 
-//If the new ArrayList contains the entered project name (i.e. if the user left the project name blank),
-//the project name is set equal to the building type plus the customer's surname:
-		if (projectNameBlank.contains(projectName))
-		{ 
+		String customerSur = checkUserInput("Customer surname:", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure surname is capitalized and contains no non-letter characters except hyphens:");	
+		String customerNam = checkUserInput("Customer first name(s):", "[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*", 
+				"Error. Please make sure name is capitalized and contains no non-letter characters except hyphens:");
+		String customerCell = checkUserInput("Customer cellphone number:", "0\\d{9}", 
+				"Error. Ivalid number. Please make sure number contains 10 digits and starts with 0:");
+		String customerMail = checkUserInput("Customer email address:", 
+				"(?!.*([_!#$%&'*+/=?`{|}~^-])\\1)([a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+\\.)*[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+@"
+				+ "((([a-zA-Z0-9]+[-][a-zA-Z0-9]+)+|[a-zA-Z0-9]+)\\.)*(?=.*[a-zA-Z])[a-zA-Z0-9]{2,}",   
+				"Error. Invalid email address format."); 
+		String customerAddress = checkUserInput("Customer physical address ('Address line 1, Address line 2, Address line 3, ..., postal code'):", 
+				"((\\d+ )?[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*, ){2,}(\\d{4})", 
+				"Error. Please enter address in format 'Address line 1, Address line 2, Address line 3, ..., postal code' "
+				+ "\n(min two address lines, address lines capitalized, 4 digit postal code):");
+				  
+//Blank ArrayList (W3schools.com, 2021***).                                            
+		List <String> projectNameBlank = new ArrayList <String>();
+		projectNameBlank.addAll(Arrays.asList("\n", "\r", "\r\n", " ", ""));
+	
+//If user leaves project name blank (blank list contains user input - Landup, 2021), 
+//sets project name to building type plus customer surname.
+		if (projectNameBlank.contains(projectName)) { 
 			projectName = buildType + " " + customerSur; 
 		}
+		String[][] projectAndPersonInfo = {{projectNum, projectName, buildType, physAddress, erfNum, totalFee, totalPaid, deadLine, 
+			architectNam + " " + architectSur, contractorNam + " " + contractorSur, customerNam + " " + customerSur},
+			{"Architect", architectSur, architectNam, architectCell, architectMail, architectAddress},
+			{"Contractor", contractorSur, contractorNam, contractorCell, contractorMail, contractorAddress},
+			{"Customer", customerSur, customerNam, customerCell, customerMail, customerAddress}};
 		
-//The entered project details are used to create an new Project object, which is then added to HashMap "projects" as a value, 
-//using the project number and project name as key (Jesper, 2012, Stackoverflow.com, t.ly/ksAl):		 		
-		projects.put(projectNum + " " + projectName, new Project(projectNum, projectName, buildType, physAddress, erfNum, totalFee, totalPaid, deadLine, 
-				architectNam + " " + architectSur, contractorNam + " " + contractorSur, customerNam + " " + customerSur));		
+	    return projectAndPersonInfo;
+	};
 
-//The person details are used to create three types of Person objects, which are added to HashMap "persons" as values, using the persons' names as keys:
-		persons.put(architectNam + " " + architectSur, new Person("Architect", architectSur, architectNam, architectCell, architectMail, architectAddress));
-		persons.put(contractorNam + " " + contractorSur, new Person("Contractor", contractorSur, contractorNam, contractorCell, contractorMail, contractorAddress));
-		persons.put(customerNam + " " + customerSur, new Person("Customer", customerSur, customerNam, customerCell, customerMail, customerAddress));
-		
-		System.out.println("\n" + projects.get(projectNum + " " + projectName));           ////These are tests.
-		System.out.println("\n" + persons.get(architectNam + " " + architectSur));
-		System.out.println("\n" + persons.get(contractorNam + " " + contractorSur));
-		System.out.println("\n" + persons.get(customerNam + " " + customerSur));              		
-	}
 	
+//9.) getNewPersonInfo()
+/**
+* Gets and validates new <code>{@link Person}</code> attribute values (for updates) via 
+* <code>{@link #checkUserInput(String, String, String) checkUserInput}</code>,
+* and returns a <code>List</code> containing the new info <code>Strings</code>. 
+*  
+* @return a <code>List</code> containing new <code>Person</code> attribute <code>Strings</code>
+* @since V2.1
+*/
+	public static String[] getNewPersonInfo() {
+		String newCellNum = checkUserInput("\nPlease enter a new cell number or press enter to skip:", "(0\\d{9})?", 
+				"Error. Ivalid number. Please make sure number contains 10 digits and starts with 0:");				
+		String newEmailAddress = checkUserInput("Please enter a new email address or press enter to skip:", 
+				"((?!.*([_!#$%&'*+/=?`{|}~^-])\\1)([a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+\\.)*[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+@"
+				+ "((([a-zA-Z0-9]+[-][a-zA-Z0-9]+)+|[a-zA-Z0-9]+)\\.)*(?=.*[a-zA-Z])[a-zA-Z0-9]{2,})?",   
+				"Error. Invalid email address format."); 			
+		String newPhysAddress = checkUserInput("Please enter a new physical address or press enter to skip:"
+				+ "('Address line 1, Address line 2, Address line 3, ..., postal code'):", 
+				"(((\\d+ )?[A-Z][a-z]+((-| )[A-Z]?[a-z]+)*, ){2,}(\\d{4}))?", 
+				"Error. Please enter address in format 'Address line 1, Address line 2, Address line 3, ..., postal code' "
+					+ "\n(min two address lines, address lines capitalized, 4 digit postal code):");
 	
-//2.) "selectProject()" selects a project. Project "selected" is declared as null (to have a return value in case the project is not found). 
-//The user is requested to enter the name or number of the project they want to update (stored as "projectNameNum").
-//For string key "i" in HashMap "projects.keySet()" (this iterates through HashMap "projects"'s keys - W3Schools.com, 2021, Java HashMap, t.ly/sLs3),
-//if "i" contains the entered project name or number, the value of key "i" (i.e. the Project object), is found and stored as "selected". 
-//The value of "selected" is then returned:
-	public static Project selectProject()  
-	{
-		
-		Project selected = null;
-		
-		System.out.println("\nPlease enter the number or name of the project you wish to update:");		
-		String projectNameNum = INPUT.nextLine();
-		
-		for (String i : projects.keySet()) 	   	
-		{			
-			if (i.contains(projectNameNum))  
-			{
-				selected = projects.get(i);
-				System.out.println("\n" + selected);   ////This is a test.
-				
-			}
-		}	
-		return selected;
-	}		
+		String[] personInfo = {newCellNum, newEmailAddress, newPhysAddress};
+		return personInfo;
+	};
 
+	
+//10.) checkUserInput()
+/**
+ * Checks user input against a regular expression (passed as parameter),
+ * displays an error message while the input does not match, or returns the 
+ * user input <code>String</code> once it matches.
+ * 	
+ * @param prompt a <code>String</code> prompting user input
+ * @param regex the regular expression that user input is matched against
+ * @param errorPrompt the error message displayed if user input does not match regex
+ * @return a <code>String</code> containing the user input 
+ * @since V2.0
+ */
+	public static String checkUserInput(String prompt, String regex, String errorPrompt) {
+		System.out.println(prompt);
+		String userInput = INPUT.nextLine();
+//Checks if input matches regex (Tutorialspoint, 2021).	
+		while (userInput.matches(regex) == false) {
+			System.out.println(errorPrompt);
+			userInput = INPUT.nextLine();
+		}
+		return userInput;
+	};		
 
-//3.) "finalizeProject()" finalizes a project and generates an invoice (if the customer still owes an amount). It passes a user-selected Project "selected" as a parameter.
-//The completion date is requested (stored as "completionDate"), and Project method "markFinalized()" is called on "selected". 
-//This adds "finalized" and the completion date to the Project object's "deadLine" attribute.
-//Next, Project "selected" is displayed (Note: this should be written to file in the final deliverable):
-	public static void finalizeProject(Project selected)
-	{
-		System.out.println("\nPlease enter the completion date:");
-		String completionDate = INPUT.nextLine();
 	
-		selected.markFinalized(completionDate);
-	
-		System.out.println("\n" + selected); ////This should be written to file eventually.
-	
-//Then, an invoice is generated. The total fee and total amount paid to date are called from Project object "selected" and cast to double (WhiteFang34, 2011, Stackoverflow.com, t.ly/QOvF).
-//The total outstanding amount is calculated and all amounts rounded off to a strings that always contain two decimals, using DecimalFormat object "df" (Ligios, 2019, A Practical Guide to DecimalFormat, Baeldung.com, t.ly/GF8B).			
-//Note: the rounding mode used in "df" is changed so numbers are rounded up if the discarded fraction is > 0.5 (Bright, 2012, & Julien, 2012 (ed.), Stackoverflow.com, t.ly/uyOC):		
-		double totalFee = Double.parseDouble(selected.totalFee); 
-		double totalPaid = Double.parseDouble(selected.totalPaid);
-		double totalOutstanding = totalFee - totalPaid;
-		
-		DecimalFormat df = new DecimalFormat("0.00");   
-		df.setRoundingMode(RoundingMode.HALF_UP);
-		
-		String totalFeeStr = df.format(totalFee);
-		String totalPaidStr = df.format(totalPaid);
-		String totalOutstandingStr = df.format(totalOutstanding);
-			
-//The strings are formatted to achieve right-alignment. "String.format("%xs", y)" formats string "y" into a string containing "x" characters.
-//The constructed string is filled up with string "y" from the right. The rest is left blank (Leon, 2016, Stackoverflow.com, t.ly/a2Xy) (Howard, 2011, Stackoverflow.com, t.ly/uL8L)
-//(javatpoint.com, 2021, Java String format(), t.ly/f9D8):
-		String totalFeeStr20 = String.format("%20s", totalFeeStr);
-		String totalPaidStr20 = String.format("%20s", totalPaidStr);
-		String totalOutstandingStr20 = String.format("%20s", ("R " + totalOutstandingStr));
-		
-//The customer name is called from Project "selected" and stored as string "customer".		
-//For string "i" in HashMap "persons.keyset()", if string "i" contains the customer name, 
-//and the total outstanding amount is not zero (invoices are not generated if full amount is already paid),
-//then the HashMap value of key string "i" (i.e. a Person object) is found, and stored as "selectedPerson":
-		String customer = selected.customer;
-		
-		for (String i : persons.keySet())		
-		{
-			if (i.contains(customer) && totalOutstanding != 0.0)
-			{	 
-				Person selectedPerson = persons.get(i);
-
-//The invoice is displayed, with project and person information called from the selected Project and Person objects, along with all amounts.
-//Note: Person method "toString2()" is used to conveniently display all customer details at once:
-				System.out.println("\n\nPOISED\t\t\t\t\t\t\tINVOICE# " + selected.projectNum + "\n"     
-						+ "\n\nBill to"                                                             ////add person title?????
-						+ "\n-------------------------------"
-						+ "\n" + selectedPerson.toString2()                                    
-						+ "\n\n\n\nDescription\t\t\t\t\t\t\t Amount"
-						+ "\n------------------------------------------------------------------------------"
-						+ "\n\nTotal fee:\t\t\t\t\t\t" + totalFeeStr20  
-						+ "\nTotal amount paid to date:\t\t\t\t" + totalPaidStr20
-						+ "\n\n\n\n\nTotal outstanding:\t\t\t\t\t" + totalOutstandingStr20
-						+ "\n------------------------------------------------------------------------------");								
-			}		
-		}		
-	}
-	
-	
-//4.)"selectPerson()" updates the details of any person. It takes the person's name as parameter.
-//For string "i" in HashMap "persons.keyset()", if string "i" (i.e. the HashMap key) contains the chosen person's name (Landup, 2021, Stackabuse.com, t.ly/xvIT), 
-//then the HashMap value of key string "i" (i.e. the Person object) is found and stored as "selectedPerson" (W3Schools.com, 2021, Java HashMap, t.ly/sLs3):
-	public static void selectPerson(String name)
-	{		
-		for (String i : persons.keySet()) 		
-		{
-			if (i.contains(name))  
-			{ 	
-				Person selectedPerson = persons.get(i);
-				
-				System.out.println("\n" + selectedPerson); ////this is a test.
-				
-//The user is then requested to enter the new personal details for the chosen person (or skip if the detail has not changed),
-//after which Person method "updatePerson()" is called on "selectedPerson", which replaces its existing cellphone number, email address, and physical address 
-//attribute values with the newly-entered ones:
-				System.out.println("\nPlease enter a new cell number or press enter to skip:");
-				String newCellNum = INPUT.nextLine();
-				System.out.println("Please enter a new email address or press enter to skip:");
-				String newEmailAddress = INPUT.nextLine();
-				System.out.println("Please enter a new physical address or press enter to skip:");  ////Might need to separate this function into two: "selectPerson()" and "updatePerson()".
-				String newPhysAddress = INPUT.nextLine();
-				
-				selectedPerson.updatePerson(newCellNum, newEmailAddress, newPhysAddress);
-				
-				System.out.println("\n" + selectedPerson); ////this is a test.
-			}
-		}		
-	}	
-			
-	
-//5.) "backToMenus()" allows users to go back to the main menu ("b") or submenu ("y"), to choose another project ("o"), or to quit ("q").
-//It includes the parameter "optionString" which allows it to display specified string options, to suit the menu and submenu options.
-//The "optionString" is displayed, and the user is requested to make their choice, stored as "goBack".
-//If "menu", "selectProject", and "subAndSelect" are false, but "submenu" is true, the user can go: back to the main menu ("b"), back to the submenu ("y"), or exit ("e").
-//If "menu", "submenu", and "subAndSelect" are false, but "selectProject" is true, the user can go: back to the main menu ("b"), back to the select another project ("y"), or exit ("e").
-//If "menu" and "selectProject" are false, but "submenu" and 'subAndSelect" are true, the user can go: back to the main menu ("b"), back to the submenu ("y"), back to the select a project ("o"), or exit ("e").
-//If the user chooses to exit ("e") in all three scenarios, the scanner is closed, and the JVM terminated:
-	public static void backToMenus(String optionString)
-	{				
-		boolean backToMenus = true;
-		while (backToMenus)
-		{
-			System.out.println(optionString);
+//11.) backToMenus1()	
+/**
+ * Controls back-navigation via changing and returning a static control <code>boolean</code>.
+ * <p>
+ * This method allows for three navigation options: go back to a submenu or select another project,
+ * go back to the main menu, or exit.
+ * <p>
+ * Refactored from V1 <code>backtoMenus</code> method.
+ * 	
+ * @param optionString a <code>String</code> displaying the navigation options
+ * @param staticBoolean the relevant static control <code>boolean</code>
+ * @return the relevant static control <code>boolean</code> - changed according to user navigation choice
+ * @since V2.0
+ */
+	public static boolean backToMenus1(String optionString, boolean staticBoolean) {					                                                         
+		while (true) {											
+			System.out.println(optionString); 					
 			String goBack = INPUT.nextLine();
-			
-			if (menu == false && submenu == true && selectProject == false && subAndSelect == false ) 
-			
-			{				
-				if (goBack.equalsIgnoreCase("b"))
-				{
-					backToMenus = false;
-					submenu = false;
-					menu = true;
-				}
-				if (goBack.equalsIgnoreCase("y"))
-				{				
-					backToMenus = false;
-				}			
-				if (goBack.equalsIgnoreCase("e"))
-				{
-					INPUT.close();
-					System.exit(0); 
-				}		
+//Goes back to current submenu loop.
+			if (goBack.equalsIgnoreCase("y")) {				
+				return staticBoolean;
+//Goes back to main menu.
+			} else if (goBack.equalsIgnoreCase("b")) {
+				staticBoolean = false;
+				return staticBoolean;
+//Writes LinkedHashMaps to text files and exits program.
+			} else if (goBack.equalsIgnoreCase("e")) {				
+				closeApp();  
 			}
-				
-			if (menu == false && submenu == false && selectProject == true && subAndSelect == false)  
-			{				
-				if (goBack.equalsIgnoreCase("b"))
-				{
-					backToMenus = false;
-					selectProject = false;
-					menu = true;
-				}
-				if (goBack.equalsIgnoreCase("y"))
-				{
-					backToMenus = false;
-				}			
-				if (goBack.equalsIgnoreCase("e"))
-				{
-					INPUT.close();
-					System.exit(0); 
-				}		
-			}	
-				
-			if (menu == false && submenu == true && selectProject == false && subAndSelect == true)
-			{
-		
-				if (goBack.equalsIgnoreCase("b"))
-				{										
-					backToMenus = false;
-					submenu = false;
-					subAndSelect = false;
-					menu = true;
-				}
-				if (goBack.equalsIgnoreCase("y"))
-				{
-					backToMenus = false;
-				}			
-				if (goBack.equalsIgnoreCase("o"))
-				{
-					backToMenus = false;
-					submenu = false;
-					subAndSelect = false;
-					selectProject = true;
-				}
-				if (goBack.equalsIgnoreCase("e"))
-				{
-					INPUT.close();
-					System.exit(0); 
-				}					
-			}		
-		}						
-	}
+		}
+	};
 	
-}
-		
+	
+//12.) backToMenus2()	
+/**
+ * Controls back-navigation via directly changing static control <code>booleans</code>.
+ * <p>
+ * This method allows for 4 navigation options: go back to a submenu, select another project,
+ * go back to the main menu, or exit.
+ * <p>
+ * Refactored from V1 <code>backtoMenus</code> method.
+ * 	
+ * @param optionString a <code>String</code> displaying the navigation options
+ * @since V2.0
+ */
+	public static void backToMenus2(String optionString) {			
+		while (true)  {
+			System.out.println(optionString); 					
+			String goBack = INPUT.nextLine();
+//Goes back to current submenu loop.				
+			if (goBack.equalsIgnoreCase("y")) {			
+				break;
+//Goes back to select another project.
+			} else if (goBack.equalsIgnoreCase("o")) {
+				submenu = false;
+				break;
+//Goes back to main menu
+			} else if (goBack.equalsIgnoreCase("b")) {											
+				submenu = false;
+				selectProject = false;
+				break;
+//Writes LinkedHashMaps to text files and exits program.
+			} else if (goBack.equalsIgnoreCase("e")) {
+				closeApp(); 
+			}					
+		}		
+	};						
 
-/////////////////// THE END ////////////////////
+
+//13.) startSequenceReadHashMaps()	
+/**
+* Reads/deserializes a <code>Map</code> from a txt file and returns it
+* (if no file exists or the file is empty, it returns an empty <code>Map</code>).
+* <p>
+* This method is called twice at the start of <code>ProjectManager</code> app to create two <code>LinkedHashMaps</code>,
+* respectively storing the <code>{@link Project}</code> and <code>{@link Person}</code> objects created and used by the application.
+* It catches <code>FileNotFoundException</code>, <code>IOException</code>, and <code>ClassNotFoundException</code>.
+* 
+* @param fileName the <code>String</code> name of the text file to be read
+* @return the <code>LinkedHashMap</code> object contained in the text file
+* @since V2.0
+*/
+	public static Map <?, ?> startSequenceReadHashmaps(String fileName) {          
+		Map <?, ?> temp = null;
+		File HashMapTextFile = new File(fileName);
+			
+//Checks if file is empty (Paul, 2021) and returns empty LinkedHashMap if yes.
+		if (HashMapTextFile.length() == 0) {
+			temp = new LinkedHashMap<>();
+			return temp;			
+		} else {			
+			try {
+//Creates InputStream from file if exists and wraps it in an ObjectInputStream (Datsabk, 2016 & Geeksforgeeks.com, 2019*). 
+				FileInputStream fis = new FileInputStream(fileName);           
+				ObjectInputStream oips = new ObjectInputStream(fis);
+//Reads LinkedHashMap from file (Datsabk, 2016 & Geeksforgeeks.com, 2019*).
+				temp = (LinkedHashMap<?, ?>)oips.readObject();
+				oips.close();
+				fis.close();
+//Thrown by FileinputStream constructor (Docs.oracle.com, 2020).
+			} catch (FileNotFoundException e) {
+				System.out.println("Error. " + fileName + " does not exist or cannot be created.");   
+				e.printStackTrace();
+//Thrown by ObjectinputStream constructor and readObject() (Docs.oracle.com, 2020***).
+			} catch (IOException io) {
+				System.out.println("Error. Problem has occured with I/O stream.");
+				io.printStackTrace();
+//Thrown by readObject() (Docs.oracle.com, 2020***).
+			} catch (ClassNotFoundException c) {
+				System.out.println("Error. Class of object not found.");
+				c.printStackTrace();
+			}
+			return temp;
+		}			
+	};	
+	
+	
+//14.) endSequenceWriteToFile()	
+/**
+ * Writes/serializes a <code>Map</code> to a text file
+ * (overwrites any existing <code>Map</code> object in the file).
+ * <p>
+ * This method is run twice every time <code>ProjectManager</code> app is exited to serialize 
+ * two <code>LinkedHashMaps</code>, respectively containing the <code>{@link Project}</code> and <code>{@link Person}</code> objects 
+ * created and used by the application.
+ * It catches <code>FileNotFoundException</code> and <code>IOException</code>.
+ * 	
+ * @param fileName the <code>String</code> name of the text file to be written to
+ * @param hashMap the <code>Map</code> object to be written to file
+ * @since V2.0
+ */
+	public static void endSequenceWriteToFile(String fileName, Map<?,?> hashMap) {   
+		Map<?,?> temp = hashMap;
+		
+		try {
+//Creates new file or creates FileOutputStream to existing file,
+			FileOutputStream fos = new FileOutputStream(fileName);
+//and wraps FileOutputStream in ObjectOutputStream (Datsabk, 2016 & Geeksforgeeks.com, 2019*).
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+//Writes LinkedHashMap object to file (Datsabk, 2016 & Geeksforgeeks.com, 2019*).
+			oos.writeObject(temp);                                          
+			oos.close();
+			fos.close();
+//Thrown by FileOutputStream constructor (Docs.oracle.com, 2015).
+		} catch (FileNotFoundException e) {
+			System.out.println("Error. " + fileName + " does not exist or cannot be created.");   
+			e.printStackTrace();
+//Thrown by ObjectOutputStream constructor and writeObject() (Docs.oracle.com, 2020*).
+		} catch (IOException io) {
+			System.out.println("Error. Problem has occured with I/O stream.");
+			io.printStackTrace();
+		}		
+	};
+
+
+//15.) closeApp() 
+/**
+* Writes/serializes <code>Map</code> objects to txt file via
+* <code>{@link #endSequenceWriteToFile(String, Map<?,?>) endSequenceWriteToFile}</code>, and exits program.
+* 
+* @since V2.1
+*/
+	public static void closeApp() {
+		endSequenceWriteToFile("projects.txt", projects);
+		endSequenceWriteToFile("persons.txt", persons);
+		INPUT.close();
+//Terminates JVM (Geeksforgeeks.com, 2016)		
+		System.exit(0);
+	}
+}
+
+			
+///////////////////////////////// THE END ///////////////////////////////////
+
+
+//References:
+
+//Bright (2012), & Julien (ed.)(2012). [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/10144636/rounding-with-decimalformat-in-java [Accessed 22 July 2021].
+//Datsabk (2016). How to read and write Java object to a file. [online] Mykong.com. Available at: https://mkyong.com/java/how-to-read-and-write-java-object-to-a-file/ [Accessed 06 June 2021].
+//Docs.oracle.com (2015). java.io Class FileOutputStream. [online] Available at: https://docs.oracle.com/javase/6/docs/api/java/io/FileOutputStream.html#FileOutputStream%28java.lang.String,%20boolean%29 [Accessed 06 June 2021].
+//Docs.oracle.com (2020). Java.ioClass FileInputStream. [online] Available at: https://docs.oracle.com/javase/7/docs/api/java/io/FileInputStream.html [Accessed 06 June 2021].
+//Docs.oracle.com (2020)*.java.io Class ObjectOutputStream. [online] Available at: https://docs.oracle.com/javase/7/docs/api/java/io/ObjectOutputStream.html [Accessed 06 June 2021].
+//Docs.oracle.com (2020)**. java.io Class FileWriter [online] Available at: https://docs.oracle.com/javase/7/docs/api/java/io/FileWriter.html [Accessed 22 July 2021].
+//Docs.oracle.com (2020)***. java.io Class ObjectInputStream. [online] Available at: https://docs.oracle.com/javase/7/docs/api/java/io/ObjectInputStream.html [Accessed 06 June 2021].
+//Docs.oracle.com (2021). java.time Class LocalDate. [online] Available at: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html [Accessed 16 July 2021].
+//Docs.oracle.com (2021)*. java.time.format Class DateTimeFormatter [online] Available at: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html [Accessed 16 July 2021].
+//Docs.oracle.com (2021)**. java.util Class Formatter. [online] Available at: https://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#dndec [Accessed 20 May 2021].
+//Francis (2013). About File file = new File(path). [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/19702659/about-file-file-new-filepath [Accessed 06 June 2021].
+//Geeksforgeeks.com (2016). System.exit() in Java. [online] Available at: https://www.geeksforgeeks.org/system-exit-in-java/  [Accessed 22 July 2021].
+//Geeksforgeeks.com (2018). Overriding toString() in Java. [online] Available at: https://www.geeksforgeeks.org/overriding-tostring-method-in-java/ [Accessed 03 June 2021].
+//Geeksforgeeks.com (2018)*. Split() String method in Java with examples. [online] Available at: https://www.geeksforgeeks.org/split-string-java-examples/ [Accessed 03 June 2021].
+//Geeksforgeeks.com (2019). File handling in Java using FileWriter and FileReader. [online] Available at: https://www.geeksforgeeks.org/file-handling-java-using-filewriter-filereader/ [Accessed 16 July 2021].
+//Geeksforgeeks.con (2019)*. Serialization and Deserialization in Java with Example. [online] Available at: https://www.geeksforgeeks.org/serialization-in-java/ [Accessed 22 July 2021].
+//Geeksforgeeks.com (2021). LinkedHashMap in Java. [online] Available at: https://www.geeksforgeeks.org/linkedhashmap-class-java-examples/ [Accessed 22 July 2021].
+//Github.io (2021). Google Java Style Guide. [online] Available at: https://google.github.io/styleguide/javaguide.html#s4-formatting [Accessed 20 May 2021].
+//Gupta, L. (2020). Java email validation using regex. [online] Howtodoinjava.com. Available at: https://howtodoinjava.com/java/regex/java-regex-validate-email-address/ [Accessed 18 July 2021].
+//harto (2009). Iterate through a HashMap [duplicate]. [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap [Accessed 16 July 2021].
+//Howard (2011). Java string align to right. [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/6080390/java-string-align-to-right [Accessed 22 July 2021].
+//iamvineettiwari012 (2012). HashMap replace(key, value) method in Java with Examples. [online] Geeksforgeeks.com. Available at: https://www.geeksforgeeks.org/hashmap-replacekey-value-method-in-java-with-examples/ [Accessed 16 July 2021].
+//JAVA (2013). Global variables in Java. [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/4646577/global-variables-in-java [Accessed 22 July 2021].
+//Javatpoint.com (2021). Java String format(). [online] Available at: https://www.javatpoint.com/java-string-format [Accessed 22 July 2021].
+//Jesper (2012). Java object name from user input as method call. [online]  Stackoverflow.com. Available at: https://stackoverflow.com/questions/13743637/java-object-name-from-user-input-as-method-call [Accessed 22 July 2021].
+//Jha, A. (2013) & user207421 (ed.)(2019). Static Final Long serialVersionUID = 1L [duplicate]. [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/14274480/static-final-long-serialversionuid-1l [Accessed 06 June 2021].
+//Landup, D. (2021). Java: Check if String Contains a Substring. [online] Stackabuse.com. Available at: https://stackabuse.com/java-check-if-string-contains-a-substring [Accessed 22 July 2021].
+//Leon (2016). What does System.out.printf( “%-15s%03d\n”, s1, x) do? [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/37780027/what-does-system-out-printf-15s03d-n-s1-x-do [Accessed 22 July 2021].
+//Ligios (2019). A Practical Guide to DecimalFormat. [online] Baeldung.com. Available at: https://www.baeldung.com/java-decimalformat [Accessed 22 July 2021].
+//Myers, M. (2009). How do I address unchecked cast warnings? [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/509076/how-do-i-address-unchecked-cast-warnings [Accessed 22 July 2021].
+//Oracle.com (2021). 9 - Naming Conventions. [online] Available at: https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html [Accessed 20 May 2021].
+//Oracle.com (2021)*. How to Write Doc Comments for the Javadoc Tool. [online] Available at: https://www.oracle.com/za/technical-resources/articles/java/javadoc-tool.html#exampleresult [Accessed 22 July 2021].
+//Paul, J. (2021). A Simple Example to Check if File is Empty in Java. [online] Java67.com. Available at: https://www.java67.com/2018/03/a-simple-example-to-check-if-file-is-empty-in-java.html [Accessed 06 June 2021].
+//Ram, V. (2018). Final static variables in Java. [online] Tutorialspoint.com. Available at: https://www.tutorialspoint.com/Final-static-variables-in-Java [Accessed 22 July 2021].
+//Skeet. J. (2008) & jcsahnwaldt Reinstate Monica (ed.)(2014). What is a serialVersionUID and why should I use it? [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it [Accessed 06 June 2021].     
+//Striver (2018). Arraylist.contains() in Java. [online] Geeksforgeeks.com. Available at: https://www.geeksforgeeks.org/arraylist-contains-java/ [Accessed 03 June 2021].
+//talnicolas (2012) & Damiano (ed.)(2016). Java FileOutputStream Create File if not exists.[online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/9620683/java-fileoutputstream-create-file-if-not-exists [Accessed 06 June 2021].
+//Tutorialspoint.com (2021). Java - String matches() Method. [online] Available at: https://www.tutorialspoint.com/java/java_string_matches.htm [Accessed 17 May 2021]. 
+//Vogel, L. (2007). Regular expressions in Java - Tutorial. [online] Vogella.com. Available at: https://www.vogella.com/tutorials/JavaRegularExpressions/article.html [Accessed 17 May 2021].
+//W3schools.com (2021). Java For Loop. [online] Available at: https://www.w3schools.com/java/java_for_loop.asp [Accessed 03 June 2021].
+//W3schools.com (2021)*. Java String replace() Method. [online] Available at: https://www.w3schools.com/java/ref_string_replace.asp [Accessed 16 July 2021].
+//W3schools.com (2021)**. Java HashMap. [online] Available at: https://www.w3schools.com/java/java_hashmap.asp [Accessed 22 July 2021].
+//W3schools.com (2021)***. Java ArrayList. [online] Available at: https://www.w3schools.com/java/java_arraylist.asp [Accessed 22 July 2021].
+//WhiteFang34 (2011). Convert String to double in Java. [online] Stackoverflow.com. Available at: https://stackoverflow.com/questions/5769669/convert-string-to-double-in-java [Accessed 22 July 2021].
+
+
+/////////////////////////////////////////////////////
