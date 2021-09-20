@@ -1,4 +1,4 @@
-# Java-ProjectManager-Capstone 
+# Java-Project-Manager
 
 [![](https://img.shields.io/badge/Version-2.1-blue.svg)](https://github.com/JOHN-HENRY-FOSTER/Java-ProjectManager-Capstone)  [![](https://img.shields.io/badge/License-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)  [![](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant-yellow.svg?style=flat-square)](http://contributor-covenant.org/version/1/4/)	
 
@@ -55,6 +55,6 @@ For more information, please see [**Licence**](LICENCE.md#licence)..
 
 ## Contact us
 
-The fastest way to get hold of us is always via [email](mailto:anoxicdrollie@gmail.com).
+The fastest way to get hold of me is always via [email](mailto:anoxicdrollie@gmail.com).
 
-Shoot us a mail, and we'll get back to you as soon as time allows - we'd would love to hear from you!
+Shoot me a mail, and I'll get back to you as soon as time allows - I would love to hear from you!
