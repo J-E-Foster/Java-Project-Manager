@@ -1,45 +1,36 @@
 package projectmanager;
 
-import java.io.FileWriter;
-import java.io.IOException;
-//For Serializable interface (makes objects of this class writable to file 
-//as intact byte stream objects - Datsabk, 2016).
-import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter; 
 import java.util.*;
 
-
+//??!!!! se if javadoc works for method links!
 /**
- * This class defines a <code>Project</code> object.
+ * This class defines a <code>Project</code>, and contains methods to manipulate <code>Projects</code> stored in a <code>Map</code>.
  * <p>
- * It is used by <code>{@link ProjectManager}</code>, and implements <code>Serializable</code>.
+ * It is used by <code>{@link ProjectManager}</code>.
  * <p>
- * Changes from V1: code refactored, attributes encapsulated, instances now writable to file, 
- * and <code>updateDeadLine</code>, <code>updateTotalPaid</code>, and <code>finalizeProject</code>
- * methods moved to <code>ProjectManager</code>.
- * <p>
- * * Changes from V2.0: Methods <code>{@link #selectProject(Map<String, Project>, String) selectProject}</code>,
+ * Changes from V2.0: Methods <code>{@link #selectProject(Map<String, Project>, String) selectProject}</code>,
  * <code>{@link #generateInvoice(Map<String, Person>) generateInvoice}</code>,
- * <code>{@link #writeFinalized() writeFinalized}</code>,
  * <code>{@link #viewAll(Map<String, Project>) viewAll}</code>,
  * <code>{@link #viewIncomplete(Map<String, Project>) viewIncomplete}</code>, and
  * <code>{@link #viewPastDue(Map<String, Project>) viewPastDue}</code> moved here from <code>{@link ProjectManager}</code>.
- * Method <code>{@link #populateProjectsMap(String[], Map <String, Project>) populateProjectsMap}</code> added.
+ * Method <code>{@link #populateProjectsMap(List<String>, Map <String, Project>) populateProjectsMap}</code> added.
+ * <p>
+ * Changes from V2.1: Method <code>{@link #mapToList(Map<String, Project>) mapToList}</code> added.
+ * Method <code>writeFinalized</code> removed.
+ * Class no longer implements Serializable.
  * 
  * @author J.E. Foster © 
- * @version V2.1 August 2021
+ * @version V3.0 August 2021
  */
-public class Project implements Serializable {          
+public class Project {          
 
-//ATTRIBUTES
-//1.) Universal version identifier for serializable class (Jha, 2013 & Skeet, 2008).
-//Used in deserialization to match class to serialized object.
-	private static final long serialVersionUID = 1L;           
+//ATTRIBUTES           
 	
-//2.1 - 2.11) Project details.
+//1.1 - 1.11) Project details.
 	private String projectNum;
 	private String projectName;
 	private String buildType;
@@ -51,6 +42,9 @@ public class Project implements Serializable {
 	private String architect;
 	private String contractor;
 	private String customer;
+	private String structuralEng;
+	private String projectMan;
+	
 		
 //CONSTRUCTOR 
 /**
@@ -58,18 +52,21 @@ public class Project implements Serializable {
  * 
  * @param projectNum a <code>String</code> containing the project number
  * @param projectName a <code>String</code> containing the project name
- * @param buildType a <code>String</code> containing the type of building
+ * @param buildType a <code>String</code> containing the type of building 
  * @param physAddress a <code>String</code> containing the building's physical address
- * @param erfNum a <code>String</code> containing the ERF number
- * @param totalFee a <code>String</code> containing the total amount owed
- * @param totalPaid a <code>String</code> containing the total amount paid to date
- * @param deadLine a <code>String</code> containing the project deadline
- * @param architect a <code>String</code> containing the architect's name and surname
- * @param contractor a <code>String</code> containing the contractor's name and surname
- * @param customer a <code>String</code> containing the customer's name and surname
+ * @param erfNum a <code>String</code> containing the ERF number 
+ * @param totalFee a <code>String</code> containing the total amount owed 
+ * @param totalPaid a <code>String</code> containing the total amount paid to date 
+ * @param deadLine a <code>String</code> containing the project deadline 
+ * @param architect a <code>String</code> containing the architect's name and surname 
+ * @param contractor a <code>String</code> containing the contractor's name and surname 
+ * @param customer a <code>String</code> containing the customer's name and surname 
+ * @param structuralEng a <code>String</code> containing the structural engineer's name and surname
+ * @param projectMan a <code>String</code> containing the project manager's name and surname
+ * 
  */
-	public Project(String projectNum, String projectName, String buildType, String physAddress, String erfNum,
-			String totalFee, String totalPaid, String deadLine, String architect, String contractor, String customer) {		
+	public Project(String projectNum, String projectName, String buildType, String physAddress, String erfNum, String totalFee, 
+			String totalPaid, String deadLine, String architect, String contractor, String customer, String structuralEng, String projectMan) {		
 		this.setProjectNum(projectNum);
 		this.setProjectName(projectName);
 		this.setBuildType(buildType);
@@ -81,6 +78,8 @@ public class Project implements Serializable {
 		this.setArchitect(architect);
 		this.setContractor(contractor);
 		this.setCustomer(customer);
+		this.setStructuralEng(structuralEng);
+		this.setProjectMan(projectMan);
 	};
 
 //METHODS																										
@@ -150,15 +149,26 @@ public class Project implements Serializable {
 	};
 	public String getCustomer() {
 		return customer;
+	};
+	public void setStructuralEng(String structuralEng) {
+		this.structuralEng = structuralEng;
+	};
+	public String getStructuralEng() {
+		return structuralEng;
 	};	
-
+	public void setProjectMan(String projectMan) {
+		this.projectMan = projectMan;
+	};
+	public String getProjectMan() {
+		return projectMan;
+	};
+	
 	
 //2.) toSTring() override (Geeksforgeeks.com, 2018).
 /**
- * Returns a labeled list of all <code>Project</code> details.
+ * Returns a labeled list of all <code>Project</code> attributes.
  * 
  * @return a <code>String</code> containing all <code>Project</code> attributes
- * @since V1
  */
 	public String toString() {
 		String output = "Project Number:\t\t\t" + getProjectNum();
@@ -172,6 +182,8 @@ public class Project implements Serializable {
 		output += "\nArchitect:\t\t\t" + getArchitect();
 		output += "\nContractor:\t\t\t" + getContractor();
 		output += "\nCustomer:\t\t\t" + getCustomer();
+		output += "\nStructural Engineer:\t\t" + getStructuralEng();
+		output += "\nProject Manager:\t\t" + getProjectMan();
 		
 		return output;
 	};
@@ -179,28 +191,47 @@ public class Project implements Serializable {
 	
 //3.) populateProjectsMap() 		 		
 /**
-* Creates new <code>Project</code> and adds it to a <code>Map</code>..
-* 	
-* @param projectinfo an <code>Array</code> containing project info <code>Strings</code>
-* @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
-* @since V2.1
-*/  		 		
-	public static void populateProjectsMap (String[] projectinfo, Map <String, Project> map) {	
-//Adds new Project info (from array) to Map; key = project number and project name (Jesper, 2012).		
-		map.put(projectinfo[0] + " " + projectinfo[1], new Project(projectinfo[0], projectinfo[1], 
-				projectinfo[2], projectinfo[3], projectinfo[4], projectinfo[5], projectinfo[6], 
-				projectinfo[7], projectinfo[8], projectinfo[9], projectinfo[10]));		
-		System.out.println("\n" + map.get(projectinfo[0] + " " + projectinfo[1]));
-	}
-	
-	
-//4.) selectProject()
+ * Creates new <code>Project</code> and adds it to a <code>Map</code>.
+ * 	
+ * @param projectinfo a <code>List</code> containing project info <code>Strings</code>
+ * @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
+ * @since V2.1
+ */
+	public static void populateProjectsMap (List<String> projectinfo, Map <String, Project> map) {	
+//Creates Project (using entered details) and adds it to Map; key = project number and project name (Jesper, 2012).	
+		map.put(projectinfo.get(0) + " " + projectinfo.get(1), new Project(projectinfo.get(0), projectinfo.get(1), 
+				projectinfo.get(2), projectinfo.get(3), projectinfo.get(4), projectinfo.get(5), projectinfo.get(6), 
+				projectinfo.get(7), projectinfo.get(8), projectinfo.get(9), projectinfo.get(10), projectinfo.get(11), projectinfo.get(12)));		
+	};
+
+
+//4.) mapToList()
 /**
-* Iterates through a <code>hMap</code> containing <code>Projects</code>, selects 
-* a <code>Project</code> according to user input, and then displays and returns the chosen <code>Project</code>. 
-* 
-* @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values 	
-* @param userInput a <code>String</code> containing <code>Project</code> name or number.
+ * Iterates through a <code>Map</code> containing <code>Projects</code>, adds each <code>Project</code> - 
+ * as <code>List</code> of <code>String</code> attributes - to a <code>List</code> of <code>Lists</code> which is returned.
+ *  
+ * @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
+ * @return a a <code>List</code> of <code>Lists</code> containing Project attributes <code>Strings</code>
+ * @since V3.0
+ */
+	public static List<List<String>> mapToList (Map<String, Project> map) {
+		List<List<String>> allProjectsList = new ArrayList<List<String>>();
+		
+		for (Project i : map.values()) {
+			allProjectsList.add(Arrays.asList(i.getProjectNum(), i.getProjectName(), i.getBuildType(), i.getPhysAddress(), i.getErfNum(), i.getTotalFee(),
+					i.getTotalPaid(), i.getDeadLine(), i.getArchitect(), i.getContractor(), i.getCustomer(), i.getStructuralEng(), i.getProjectMan()));
+		}
+		return allProjectsList;
+	};
+		
+		
+//5.) selectProject()
+/**
+* Iterates through a <code>Map</code> containing <code>Projects</code>, selects 
+* a <code>Project</code> according to user input, and then displays and returns the <code>Project</code>. 
+* 	
+* @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
+* @param userInput a <code>String</code> containing user-input <code>Project</code> number or name
 * @return the <code>Project</code> object selected by the user (null if no project found)
 * @since V1
 */
@@ -218,18 +249,17 @@ public class Project implements Serializable {
 		return selectedProject;	
 	};
 	
-		
 
-//5.) generateInvoice()
+//6.) generateInvoice()
 /**
  * Generates and displays a customer invoice if amount is outstanding.
  * <p>
  * This method calculates the outstanding amount via the <code>totalFee</code> and <code>totalPaid</code> attributes 
- * of a selected <code>Project</code>, and displays an invoice containing all amounts and the customer's personal info 
- * (accessed via a <code>hMap</code> containing <code>{@link Person}</code> objects.
+ * of a selected <code>Project</code> object (passed as parameter). An invoice is generated containing all amounts, 
+ * plus the customer's personal info (accessed via a <code>Map</code> containing <code>{@link Person}</code> objects).
  * 
- * @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
- * @since V2.0 (originally part of V1 <code>finalizeProject</code>)
+ * @param map a <code>Map</code> with <code>String</code> keys and <code>Person</code> values
+ * @since V2.0 (originally part of obsolete V1 <code>ProjectManager.finalizeProject</code>)
  */
 	public void generateInvoice(Map <String, Person> map)	{	
 		
@@ -273,36 +303,13 @@ public class Project implements Serializable {
 		}
 		if (outstanding == false) {
 			System.out.println("\n\nNo amount due.");
-		}
-		System.out.println("\n" + this);
+		}	
 	};	
-
-	
-//6.) writeFinalized()	
-/**
- * Writes (appends) finalized <code>Project</code> details to a txt file.
- * <p>
- * This method catches <code>IOException</code>.
- * 	
- * @since V2.0
- */
-	public void writeFinalized() {	
-//Creates and writes to project details to file if file doesn't exist; appends if file exists (Geeksforgeeks.com, 2019).		
-		try {
-			FileWriter fw = new FileWriter("Completed project.txt", true); 
-			fw.write("\r\n" + this + "\r\n\r\n");
-			fw.close();
-//Thrown by FileWriter constructor and write() (Docs.oracle.com, 2020**).
-		} catch (IOException io) {
-			System.out.println("Error. Completed project.txt cannot be found or opened, or cannot be created.");
-			io.printStackTrace();
-		}
-	};			
-	
+		
 	
 //7.) viewAll()	
 /**
-* Iterates through a <code>Map</code> containing <code>Project</code> objects,
+* Iterates through a <code>Map</code> containing <code>Projects</code>,
 * and displays all <code>Projects</code>.
 * 
 * @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
@@ -319,7 +326,7 @@ public class Project implements Serializable {
 	
 //8) viewIncomplete()	
 /**
-* Iterates through a <code>Map</code> containing <code>Project</code> objects,
+* Iterates through a <code>Map</code> containing <code>Projects</code>,
 * and displays incomplete <code>Projects</code>.
 * 
 * @param map a <code>Map</code> with <code>String</code> keys and <code>Project</code> values
@@ -371,10 +378,8 @@ public class Project implements Serializable {
 		}
 		if (counter == 0) {
 			System.out.println("\nNo projects are past their due date.");
-		}			
-			
-	};
-				
+		}						
+	};	
 }
 
 /////////////////////////////////////////////////////////////////
