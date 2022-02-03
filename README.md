@@ -53,7 +53,7 @@ Anyone can use, edit, and redistribute it in any way they see fit, but it must b
 
 For more information, please see [**Licence**](LICENCE.md#licence)..
 
-## Contact us
+## Contact me
 
 The fastest way to get hold of me is always via email at:
 
