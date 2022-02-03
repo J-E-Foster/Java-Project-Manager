@@ -1,21 +1,21 @@
 # Java-Project-Manager
 
-[![](https://img.shields.io/badge/Version-2.1-blue.svg)](https://github.com/JOHN-HENRY-FOSTER/Java-ProjectManager-Capstone)  [![](https://img.shields.io/badge/License-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)  [![](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant-yellow.svg?style=flat-square)](http://contributor-covenant.org/version/1/4/)	
+[![](https://img.shields.io/badge/Version-3-blue)](https://github.com/JOHN-HENRY-FOSTER/Java-ProjectManager-Capstone)  [![](https://img.shields.io/badge/License-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)  [![](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant-yellow.svg?style=flat-square)](http://contributor-covenant.org/version/1/4/)	
 
-This project is a project management application designed for a small engirneering firm to keep track of their projects and the people involved in them.  It aims to provide a more effective way of securely storing, accessing, and changing vital project and personal information, and could be adapted for any organization with similar needs.
+This project is a project-management database application designed for a small engineering firm to keep track of their projects and the people involved in them.  It aims to provide a more effective way of securely storing, accessing, and changing vital project and personal information, and could be adapted for any organization with similar needs.
 
 ## How does it work?
 
 ### Users can:
-* Create new projects and capture all neccessary to store project and personal info 
-* Update information about existing projects
+* Create new projects and capture all neccessary data to store project and personal info 
+* Update information about existing projects and people
 * Finalize projects and generate invoices
 * View incomplete or past-due projects
 * Find and view individual projects and people
 
 ## Who can use it? 
 
-Anyone  can use this free, open source software, although it was desinged for:
+Anyone can use this free, open source software, although it was desinged for:
 * Organizations or individuals who wish to have a more efficient record keeping system for various medium to large scale projects.
 * Engineering and architecture firms.
 * Property development firms.
@@ -55,6 +55,8 @@ For more information, please see [**Licence**](LICENCE.md#licence)..
 
 ## Contact us
 
-The fastest way to get hold of me is always via [email](mailto:anoxicdrollie@gmail.com).
+The fastest way to get hold of me is always via email at:
+
+jefoster1.618@gmail.com
 
 Shoot me a mail, and I'll get back to you as soon as time allows - I would love to hear from you!
